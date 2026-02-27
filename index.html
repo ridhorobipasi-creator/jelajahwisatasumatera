@@ -11,7 +11,7 @@
     <!-- Meta SEO -->
     <meta property="og:title" content="Jelajah Wisata Sumatera" />
     <meta property="og:description" content="Feel The Adventure, Live The Heritage" />
-    <meta property="og:image" content="https://i.pinimg.com/1200x/9b/f7/aa/9bf7aa222e1ca7278f43330dda1828ee.jpg" />
+    <meta property="og:image" content="assets/danau-toba.png" />
     <meta property="og:type" content="website" />
     <link rel="icon" href="https://www.instagram.com/favicon.ico" />
 
@@ -24,14 +24,14 @@
 
     <style>
         :root {
-            --accent: #E5C185;
-            /* Champagne Gold */
-            --accent-glow: rgba(229, 193, 133, 0.4);
-            --bg-dark: #080907;
-            --white: #F8F9FA;
+            --accent: #D4AF37;
+            --accent-glow: rgba(212, 175, 55, 0.15);
+            --bg-dark: #000000;
+            --white: #FFFFFF;
             --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --text-secondary: rgba(248, 249, 250, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         * {
@@ -116,10 +116,13 @@
         /* ─── SCROLL WRAPPER ─── */
         .wrapper {
             width: 100%;
-            max-width: 420px;
-            padding: 60px 24px;
+            max-width: 400px;
+            padding: 40px 24px;
             position: relative;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
 
         /* ─── PROFILE AREA ─── */
@@ -131,55 +134,52 @@
         .avatar-wrap {
             position: relative;
             display: inline-block;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             animation: profileReveal 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .avatar {
-            width: 110px;
-            height: 110px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             padding: 4px;
             border: 1px solid var(--glass-border);
             background: var(--glass);
             position: relative;
-            z-index: 2;
+            margin: 0 auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .avatar img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             object-fit: cover;
-        }
-
-        .avatar-glow {
-            position: absolute;
-            inset: -10px;
-            background: var(--accent-glow);
-            filter: blur(40px);
-            opacity: 0.3;
-            z-index: 1;
+            border-radius: 50%;
         }
 
         .brand-name {
             font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 28px;
-            letter-spacing: -1px;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: -0.5px;
             text-transform: uppercase;
             margin-bottom: 4px;
+            color: var(--white);
             animation: textReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s backwards;
         }
 
         .brand-tagline {
-            font-family: 'Bodoni Moda', serif;
-            font-style: italic;
-            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
             color: var(--accent);
             letter-spacing: 2px;
-            opacity: 0.8;
+            opacity: 0.7;
+            font-weight: 400;
             animation: textReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s backwards;
+            text-transform: uppercase;
         }
 
         /* ─── LINK AREA ─── */
@@ -192,39 +192,22 @@
         .card {
             display: flex;
             align-items: center;
-            padding: 20px 24px;
+            padding: 16px 20px;
             background: var(--glass);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 16px;
             text-decoration: none;
             color: var(--white);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: var(--transition);
             animation: cardReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
         }
 
-        .card:nth-child(1) {
-            animation-delay: 0.6s;
-        }
-
-        .card:nth-child(2) {
-            animation-delay: 0.7s;
-        }
-
-        .card:nth-child(3) {
-            animation-delay: 0.8s;
-        }
-
-        .card:nth-child(4) {
-            animation-delay: 0.9s;
-        }
-
         .card:hover {
-            background: rgba(255, 255, 255, 0.08);
             border-color: var(--accent);
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .icon {
@@ -233,38 +216,40 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            font-size: 20px;
-            margin-right: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            font-size: 18px;
+            margin-right: 16px;
             border: 1px solid var(--glass-border);
-            transition: all 0.3s;
+            transition: var(--transition);
+            color: var(--accent);
         }
 
         .card:hover .icon {
             background: var(--accent);
-            color: var(--bg-dark);
-            transform: rotate(-10deg);
+            color: #000;
+            transform: scale(1.05);
         }
 
         .info {
             flex: 1;
+            z-index: 1;
         }
 
         .title {
             display: block;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 15px;
             margin-bottom: 2px;
-            letter-spacing: 0.3px;
         }
 
         .subtitle {
             display: block;
-            font-size: 11px;
-            color: var(--text-secondary);
+            font-size: 10px;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 400;
         }
 
         .chevron {
@@ -473,20 +458,20 @@
             <div class="avatar-wrap">
                 <div class="avatar-glow"></div>
                 <div class="avatar">
-                    <img src="avatar.jpg" alt="JWS Profile"
+                    <img src="assets/avatar.jpg" alt="JWS Profile"
                         onerror="this.src='https://ui-avatars.com/api/?name=Jelajah+Sumatera&background=1a1a0e&color=E5C185'" />
                 </div>
             </div>
             <h1 class="brand-name">Jelajah Wisata Sumatera</h1>
-            <p class="brand-tagline">Feel The Adventure, Live The Heritage</p>
+            <p class="brand-tagline">your best friend in travel</p>
         </header>
 
         <main class="links">
-            <a href="https://www.instagram.com/jelajahwisatasumatera/" class="card" target="_blank">
-                <div class="icon">🗺️</div>
+            <a href="blog.html" class="card">
+                <div class="icon">📖</div>
                 <div class="info">
-                    <span class="title">Paket Wisata Sumatera</span>
-                    <span class="subtitle">Private Trip & Group Tour Terpercaya</span>
+                    <span class="title">Blog Travel</span>
+                    <span class="subtitle">Eksplorasi Keindahan Sumatera</span>
                 </div>
                 <span class="chevron">→</span>
             </a>

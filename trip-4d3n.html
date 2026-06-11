@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Explore Danau Toba 4D3N — Jelajahwisatasumatera</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #0b120c;
+            background-image:
+                linear-gradient(rgba(8, 14, 9, 0.82), rgba(8, 14, 9, 0.93)),
+                url('https://images.unsplash.com/photo-1536147116438-ce2664d4c382?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .page { max-width: 1040px; margin: 0 auto; padding: 40px 26px 56px; }
+
+        /* dua kolom di layar lebar supaya halaman tidak panjang ke bawah */
+        .cols2 { display: grid; grid-template-columns: 1fr; gap: 0 48px; }
+        @media (min-width: 760px) { .cols2 { grid-template-columns: 1fr 1fr; } }
+
+        /* ===== Tipografi ala pricelist PDF ===== */
+        .display {
+            font-family: 'Archivo', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.05;
+        }
+
+        .logo-wrap { text-align: center; margin-bottom: 28px; }
+        .logo-wrap img {
+            width: 190px;
+            border-radius: 14px;
+            background: #fff;
+            padding: 4px 10px;
+        }
+
+        .eyebrow {
+            text-align: center;
+            font-weight: 700;
+            font-size: 17px;
+            letter-spacing: 12px;
+            text-indent: 12px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        h1.display {
+            text-align: center;
+            font-size: clamp(54px, 13vw, 86px);
+            letter-spacing: 1px;
+        }
+
+        .with {
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 5px;
+            text-indent: 5px;
+            text-transform: uppercase;
+            margin-top: 14px;
+        }
+
+        .trip-title {
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(20px, 5vw, 27px);
+            text-transform: uppercase;
+            margin: 34px 0 8px;
+        }
+
+        h2.sec {
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(19px, 4.6vw, 24px);
+            text-transform: uppercase;
+            margin: 34px 0 16px;
+        }
+
+        h3.sub {
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(16px, 4vw, 20px);
+            text-transform: uppercase;
+            margin: 22px 0 12px;
+        }
+
+        /* ===== Pricelist: bullet tengah seperti PDF ===== */
+        .price-list { list-style: none; text-align: center; }
+        .price-list li {
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(16px, 4.2vw, 21px);
+            text-transform: uppercase;
+            padding: 3px 0;
+        }
+        .price-list li::before { content: '•  '; }
+
+        .price-note {
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(13px, 3.4vw, 16px);
+            text-transform: uppercase;
+            margin-top: 18px;
+        }
+
+        /* ===== Itinerary ===== */
+        .day { margin-bottom: 26px; }
+
+        .day-title {
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(16px, 4.2vw, 20px);
+            text-transform: uppercase;
+            margin: 0 0 6px;
+        }
+
+        .day-intro {
+            font-weight: 600;
+            font-size: 14px;
+            color: #cfe3c8;
+            margin-bottom: 14px;
+        }
+
+        .iti { list-style: none; counter-reset: iti; }
+        .iti li {
+            counter-increment: iti;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 14px;
+            font-size: 14.5px;
+            font-weight: 500;
+            padding: 4px 0;
+        }
+        .iti li::before {
+            content: counter(iti) ". ";
+            font-weight: 700;
+            min-width: 22px;
+        }
+        .iti .t { font-weight: 600; white-space: nowrap; color: #e8eee4; font-size: 13px; }
+        .iti .p { flex: 1; }
+
+        .day-done {
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #9ed489;
+            margin-top: 12px;
+        }
+
+        /* ===== Include / Exclude / Note: numbered list seperti PDF ===== */
+        .num-list { list-style: none; counter-reset: n; }
+        @media (min-width: 760px) {
+            .num-list.split { columns: 2; column-gap: 48px; }
+            .num-list.split li { break-inside: avoid; }
+        }
+        .num-list li {
+            counter-increment: n;
+            display: flex;
+            gap: 10px;
+            font-size: 14.5px;
+            font-weight: 500;
+            padding: 3.5px 0;
+        }
+        .num-list li::before {
+            content: counter(n) ".";
+            font-weight: 700;
+            min-width: 26px;
+            text-align: right;
+        }
+
+        /* ===== Mengapa memilih kami: dot hijau seperti PDF ===== */
+        .dot-list { list-style: none; }
+        @media (min-width: 760px) {
+            .dot-list { columns: 2; column-gap: 48px; }
+            .dot-list li { break-inside: avoid; }
+        }
+        .dot-list li {
+            position: relative;
+            padding: 7px 0 7px 24px;
+            font-size: 14.5px;
+            font-weight: 500;
+        }
+        .dot-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #7fc25e;
+        }
+        .dot-list li strong { font-weight: 700; }
+
+        .disclaimer {
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: clamp(13px, 3.4vw, 16px);
+            text-transform: uppercase;
+            line-height: 1.6;
+            margin-top: 36px;
+            max-width: 760px;
+            margin-inline: auto;
+        }
+
+        hr { border: none; border-top: 1px solid rgba(255, 255, 255, 0.18); margin: 34px auto; width: 120px; }
+
+        /* ===== Penutup ===== */
+        .thanks {
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 900;
+            font-size: clamp(34px, 9vw, 54px);
+            text-transform: uppercase;
+            margin: 40px 0 22px;
+        }
+
+        .contact { text-align: center; font-weight: 600; font-size: 15px; }
+        .contact div { padding: 6px 0; }
+        .contact a { color: #fff; text-decoration: none; }
+        .contact a:hover { text-decoration: underline; }
+
+        .wa-btn {
+            display: block;
+            width: fit-content;
+            margin: 34px auto 0;
+            background: #25D366;
+            color: #073317;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-size: 15px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 16px 36px;
+            border-radius: 8px;
+        }
+        .wa-btn:hover { background: #2ee878; }
+
+        .floating-wa {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #25D366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+            z-index: 99;
+        }
+        .floating-wa svg { width: 27px; height: 27px; fill: #073317; }
+
+        footer { text-align: center; font-size: 12px; font-weight: 500; color: #b8c4b2; margin-top: 48px; }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+
+        <!-- ===== COVER ===== -->
+        <div class="logo-wrap">
+            <img src="assets/avatar.jpg" alt="Jelajahwisatasumatera — Your Best Friend in Travel">
+        </div>
+
+        <div class="eyebrow">Explore</div>
+        <h1 class="display">Danau Toba</h1>
+        <div class="with">With<br>Jelajahwisatasumatera</div>
+
+        <div class="trip-title">Private Trip 4 Days 3 Night</div>
+
+        <!-- ===== PRICELIST ===== -->
+        <div class="cols2">
+            <div>
+                <h3 class="sub">Pricelist 1-4 Orang<br>Guna Kreta SUV</h3>
+                <ul class="price-list">
+                    <li>(1 PAX) RM 2.300/PAX</li>
+                    <li>(2 PAX) RM 1.190/PAX</li>
+                    <li>(3 PAX) RM 895/PAX</li>
+                    <li>(4 PAX) RM 810/PAX</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="sub">Pricelist 5-10 Orang<br>Guna Van Hiace Premio</h3>
+                <ul class="price-list">
+                    <li>(5 PAX) RM 871/PAX</li>
+                    <li>(6 PAX) RM 837/PAX</li>
+                    <li>(7 PAX) RM 818/PAX</li>
+                    <li>(8 PAX) RM 795/PAX</li>
+                    <li>(9 PAX) RM 745/PAX</li>
+                    <li>(10 PAX) RM 725/PAX</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="price-note">Kanak kanak umur 5 tahun kebawah free</div>
+        <div class="price-note">Pricelist 11 orang keatas boleh<br>confirm sahaja ya</div>
+
+        <hr>
+
+        <!-- ===== ITINERARY ===== -->
+        <h2 class="sec">Itinerary</h2>
+
+        <div class="cols2">
+        <div class="day">
+        <div class="day-title">Day 1 (Start Airport Kualanamu)</div>
+        <p class="day-intro">Berangkat dari airport 8.00 am, perjalanan 3 jam (target ketibaan di tempat pertama Sarune cafe lavender 11.00 am)</p>
+        <ol class="iti">
+            <li><span class="p">Sarune cafe lavender</span><span class="t">11.00 am - 11.30 am</span></li>
+            <li><span class="p">Lunch di sarune cafe lavender</span><span class="t">11.30 am - 12.30 pm</span></li>
+            <li><span class="p">Sipiso piso waterfall (boleh turun)</span><span class="t">1.30 pm - 3.30 pm</span></li>
+            <li><span class="p">Loken barn</span><span class="t">3.45 pm - 4.30 pm</span></li>
+            <li><span class="p">Paepira Lakeside</span><span class="t">5.00 pm - 6.00 pm</span></li>
+            <li><span class="p">Check in ello hotel paropo</span><span class="t">5.30 pm</span></li>
+            <li><span class="p">Sunset dan menikmati fasilitas hotel</span><span class="t">6.00 pm - 7.00 pm</span></li>
+            <li><span class="p">Dinner di resto hotel</span><span class="t">8.00 pm - 9.00 pm</span></li>
+            <li><span class="p">Kembali ke bilik dan berehat</span><span class="t">9.00 pm</span></li>
+        </ol>
+        <div class="day-done">Trip Day 1 Selesai</div>
+        </div>
+
+        <div class="day">
+        <div class="day-title">Day 2 (Switzerland Danau Toba)</div>
+        <p class="day-intro">Setelah breakfast lalu check out ello hotel paropo 8.30 am menuju tempat pertama sitiristiris waterfall</p>
+        <ol class="iti">
+            <li><span class="p">Jalan menuju Silalahi (view bukit cantik)</span><span class="t">8.30 am - 9.00 am</span></li>
+            <li><span class="p">Tiba di ujung jalan Silalahi</span><span class="t">9.00 am</span></li>
+            <li><span class="p">Menuju sitiristiris (Swiss nya danau toba)</span><span class="t">9.30 am - 10.00 am</span></li>
+            <li><span class="p">Sitiristiris waterfall</span><span class="t">10.00 am - 11.00 am</span></li>
+            <li><span class="p">Menuju namoura coffee and resto</span><span class="t">1 jam 30 menit</span></li>
+            <li><span class="p">Lunch di namoura coffee and resto</span><span class="t">12.30 pm - 1.30 pm</span></li>
+            <li><span class="p">Menara pandang tele</span><span class="t">2.30 pm - 3.30 pm</span></li>
+            <li><span class="p">Efrata waterfall</span><span class="t">4.00 pm - 4.30 pm</span></li>
+            <li><span class="p">Check in hope villa</span><span class="t">5.30 pm</span></li>
+            <li><span class="p">Sunset dan menikmati fasilitas hotel</span><span class="t">5.30 pm - 6.30 pm</span></li>
+            <li><span class="p">Dinner di resto hotel</span><span class="t">7.30 pm - 8.30 pm</span></li>
+        </ol>
+        <div class="day-done">Trip Day 2 Selesai</div>
+        </div>
+
+        <div class="day">
+        <div class="day-title">Day 3 (Explore Samosir)</div>
+        <p class="day-intro">Setelah breakfast check out hope villa 9.00 am menuju tempat pertama bukit holbung</p>
+        <ol class="iti">
+            <li><span class="p">Ferry crossing (pintu batu - Sihotang)</span><span class="t">9.30 am - 10.00 am</span></li>
+            <li><span class="p">Bukit holbung (spot drone)</span><span class="t">10.30 am - 12.00 pm</span></li>
+            <li><span class="p">Bukit cinta + warung muslim 66 viral</span><span class="t">12.30 pm - 1.00 pm</span></li>
+            <li><span class="p">Lunch di janji maria coffee and resto</span><span class="t">2.30 pm - 3.30 pm</span></li>
+            <li><span class="p">Huta siallagan (kampung adat)</span><span class="t">4.30 pm - 5.00 pm</span></li>
+            <li><span class="p">Pasar tomok (souvenir khas kaum batak)</span><span class="t">5.30 pm - 6.30 pm</span></li>
+            <li><span class="p">Check in hotel Samosir cottages</span><span class="t">7.00 pm</span></li>
+            <li><span class="p">Dinner di resto hotel</span><span class="t">8.00 pm - 9.00 pm</span></li>
+        </ol>
+        <div class="day-done">Trip Day 3 Selesai</div>
+        </div>
+
+        <div class="day">
+        <div class="day-title">Day 4 (Samosir dan Medan)</div>
+        <p class="day-intro">Breakfast dan menikmati fasilitas hotel dengan view kolam berenang dan danau toba lalu check out hotel jam 9.00 am</p>
+        <ol class="iti">
+            <li><span class="p">Seadoo Safari Samosir (jetski)</span><span class="t">Opsional</span></li>
+            <li><span class="p">Ferry crossing (ambarita - ajibata)</span><span class="t">9.30 am - 10.30 am</span></li>
+            <li><span class="p">Kebun teh Sidamanik</span><span class="t">12.00 pm - 12.30 pm</span></li>
+            <li><span class="p">Pemandian alam bah damanik</span><span class="t">1.00 pm - 1.30 pm</span></li>
+            <li><span class="p">Bolu meranti (cake khas medan)</span><span class="t">4.00 pm - 5.00 pm</span></li>
+            <li><span class="p">Kuliner di kampung kecil medan</span><span class="t">5.30 pm - 6.30 pm</span></li>
+            <li><span class="p">Menuju airport Kualanamu (KNO)</span><span class="t">1 jam perjalanan</span></li>
+            <li><span class="p">Tiba di airport kualanamu (KNO)</span><span class="t">9.00 pm</span></li>
+        </ol>
+        <div class="day-done">Perpisahan dan Trip Selesai</div>
+        </div>
+        </div>
+
+        <hr>
+
+        <!-- ===== INCLUDE ===== -->
+        <h2 class="sec">Include</h2>
+        <ol class="num-list split">
+            <li>Transport kereta/van full aircon</li>
+            <li>Driver sekaligus tour guide, fotografer dan pilot drone (1 orang)</li>
+            <li>Hotel ello paropo with view bukit cantik dan danau toba yang indah</li>
+            <li>Hotel hope villa with view bukit cantik dan danau toba yang tenang</li>
+            <li>Hotel 4 star samosir cottages with view swimming pool dan danau toba yang indah</li>
+            <li>Semua hotel include breakfast</li>
+            <li>Semua hotel ada aircon dan iron</li>
+            <li>Hotel driver tidak perlu di tanggung (tidur dalam transport)</li>
+            <li>Makan driver selama trip (tidak perlu di tanggung)</li>
+            <li>Sampan menuju sitiristiris waterfall</li>
+            <li>Air mineral selama trip</li>
+            <li>Di pickup langsung ke rumah, hotel, atau airport (sekitaran binjai/medan)</li>
+            <li>Bebas request seluruh wisata danau toba</li>
+            <li>Tiket masuk seluruh wisata danau toba</li>
+            <li>Parking transport selama trip</li>
+            <li>Dokumentasi camera Nikon D3400 + lensa kit</li>
+            <li>Dokumentasi camera Sony ZV E10 mark II + lensa viltrox 35 mm f 1.7</li>
+            <li>Dokumentasi drone dji mini 3</li>
+            <li>Dokumentasi drone FPV dji avata 360</li>
+            <li>Dokumentasi drone dji mavic 4 pro</li>
+            <li>Dokumentasi video cinematic (jika ada moment)</li>
+            <li>Dokumentasi gambar + video iPhone 17 Pro</li>
+            <li>Unlimited gambar dan video</li>
+            <li>Editing</li>
+            <li>Biaya tol (high way)</li>
+            <li>Biaya kapal penyeberangan (Ferry crossing yang ada pertunjukkan orang menari di kapal dan kapal yang paling mewah di danau toba)</li>
+            <li>P3K (first aid kit)</li>
+            <li>Pengisian daya smartphone di kereta</li>
+            <li>2 unit adaptor charger (2 pin)</li>
+            <li>Welcome fruit dan welcome snack (saat penjemputan)</li>
+            <li>Special welcome dengan bouquet bunga dan kalung bunga (jika pickup di airport)</li>
+            <li>Untuk tamu 4 orang ke atas boleh request mau 1 bilik atau 2 bilik</li>
+            <li>Key chain (sebagai kenang kenangan setelah trip selesai)</li>
+        </ol>
+
+        <!-- ===== EXCLUDE ===== -->
+        <h2 class="sec">Exclude</h2>
+        <ol class="num-list">
+            <li>Makan pribadi selama trip</li>
+            <li>Flight ticket</li>
+            <li>Biaya main jetski (opsional)</li>
+        </ol>
+
+        <hr>
+
+        <!-- ===== MENGAPA MEMILIH KAMI ===== -->
+        <h2 class="sec">Mengapa Memilih Kami?</h2>
+        <ul class="dot-list">
+            <li>Kami menerapkan prinsip kejujuran dan kepuasan tamu adalah yang utama</li>
+            <li><strong>Satu satunya agent travel yang memberikan jaminan 100% uang kembali jika liburannya tidak sesuai atau tidak menyenangkan</strong> (contoh: kami memberikan video hotel yang akan digunakan beserta viewnya, dan itulah yang akan anda dapatkan)</li>
+            <li>Tour guide full service, akan siap membantu anda dalam situasi apapun, seperti membantu membawa barang bawaan anda atau membantu anda mengambil gambar dan video menggunakan camera dan drone</li>
+            <li>Driver sekaligus tour guide (jadi akan di ceritakan sejarah tentang danau Toba dan tempat yang di kunjungi, jadi liburannya tidak akan membosankan)</li>
+            <li>Privasi anda akan kami jaga ketat — foto/video anda selama liburan tidak akan kami upload ke story sosial media kami jika tidak dapat izin dari anda</li>
+            <li>Tour guide tidak merokok/vape</li>
+            <li>Tour guide akan membawa anda ke tempat makan yang enak dan 100% halal</li>
+            <li>Satu satunya agent travel dengan gear dokumentasi paling lengkap (Canon, Nikon, Sony, dji mini 3, dji avata 360, dji mavic 4 pro, gimbal RS3 mini, iPhone 17 pro dan lain lain)</li>
+            <li>Jelajahwisatasumatera sudah berdiri selama 2 tahun dan sudah begitu banyak tamu yang kami handle dari dalam negara maupun luar negara, satupun tamu kami tidak ada yang kecewa dengan trip dan pelayanan yang kami berikan</li>
+            <li>No scam 100% sebab Jelajahwisatasumatera sudah menjadi badan hukum usaha (PT Jelajah Wisata Sumatera) yang terdaftar di negara Indonesia</li>
+        </ul>
+
+        <!-- ===== NOTE ===== -->
+        <h2 class="sec">Note</h2>
+        <ol class="num-list split">
+            <li>Sistem boking wajib deposit untuk keep date yang diinginkan</li>
+            <li>Jumlah deposit tergantung dari bookingan untuk berapa orang</li>
+            <li>Jumlah deposit sekaligus untuk boking hotel, karena hotel yang kita recommend adalah hotel paling sering full di danau toba (sering kejadian tidak dapat room walaupun boking 1 bulan sebelum jadual trip)</li>
+            <li>Jika kita bisa memanajemen waktu, kita bisa ikutin jadwal sesuai itinerary, jika tidak, mungkin akan ada tempat yang harus di skip karena waktu tidak cukup</li>
+            <li>Itinerary juga bisa berubah bergantung jadwal flight anda atau dimana anda di pick up</li>
+            <li>Tempat makan yang ada dalam itinerary 100% halal dan enak</li>
+            <li>Boleh request camping di bukit holbung</li>
+            <li>Boleh request main paralayang dan paragliding</li>
+            <li>Boleh request main jetski dan parasailing</li>
+            <li>Boleh request hiking gunung sibayak (sunrise atau camping)</li>
+            <li>Boleh request kolam abadi (palaruga)</li>
+            <li>Khusus untuk perempuan, kami recommend menggunakan outfit dress yang kembang waktu di bukit holbung dan bukit cinta agar hasil dokumentasi drone bagus</li>
+            <li>Testimony boleh check di highlight Instagram kami berjudul TESTIMONY dan TESTIMONY 2</li>
+            <li>Ada yang kurang jelas boleh chat WhatsApp mimin yaa:)</li>
+        </ol>
+
+        <div class="disclaimer">
+            Disclaimer !!!<br>
+            Jika anda dari luar kota Medan atau luar negara dan belum beli flight ticket mohon untuk confirm tarikh dahulu, apakah tarikh yang anda inginkan masih available atau tidak. Terimakasih
+        </div>
+
+        <!-- ===== PENUTUP ===== -->
+        <div class="thanks">Terimakasih</div>
+
+        <div class="contact">
+            <div><a href="https://wa.me/6285272388532" target="_blank">WhatsApp &nbsp;+62 852 - 7238 - 8532</a></div>
+            <div><a href="https://www.instagram.com/jelajahwisatasumatera" target="_blank">Instagram &nbsp;jelajahwisatasumatera</a></div>
+            <div><a href="https://www.tiktok.com/@jelajahwisatasumatera" target="_blank">TikTok &nbsp;jelajahwisatasumatera</a></div>
+        </div>
+
+        <a class="wa-btn" href="https://wa.me/6285272388532?text=Halo%20Jelajahwisatasumatera,%20saya%20mau%20booking%20Private%20Trip%20Danau%20Toba%204D3N" target="_blank">Booking Sekarang</a>
+
+        <footer>PT Jelajah Wisata Sumatera — Your Best Friend in Travel</footer>
+    </div>
+
+    <a href="https://wa.me/6285272388532" class="floating-wa" target="_blank" aria-label="Chat WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.5 4.5-9.9 9.9-9.9 5.5 0 9.9 4.5 9.9 9.9s-4.4 9.8-9.9 9.8zm5.5-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+    </a>
+</body>
+</html>

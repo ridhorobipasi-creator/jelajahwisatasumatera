@@ -35,12 +35,15 @@
         body {
             background: #000;
             line-height: 0;
-            max-width: 480px; /* Membatasi lebar maksimum seperti layar HP */
-            margin: 0 auto;   /* Memposisikan konten di tengah layar desktop */
+            max-width: 480px;
+            margin: 0 auto;
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8); /* Bayangan kuat agar terpisah dari background */
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
             min-height: 100vh;
-            
+            /* Scroll halus di iOS */
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            overscroll-behavior-y: contain;
         }
 
         /* ── Back Button ── */
@@ -70,9 +73,25 @@
         .back-btn svg { width: 22px; height: 22px; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
         /* ── Frame gambar biasa ── */
+        .frame {
+            /* Render off-screen frames hanya saat mau masuk viewport */
+            content-visibility: auto;
+            contain-intrinsic-size: 0 600px;
+        }
         .frame img {
             width: 100%;
             display: block;
+            /* Decode gambar di thread terpisah agar scroll tidak patah */
+            decoding: async;
+        }
+
+        /* ── Fade-in video saat mulai play ── */
+        video {
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        video.is-playing {
+            opacity: 1;
         }
 
         /* ── Frame video hotel (frame 4–7) ── */
@@ -232,29 +251,29 @@
     <!-- FRAME 1 — Cover                            -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-01.webp" alt="Explore Danau Toba 5D4N" loading="lazy">
+        <img src="assets/5d4n/frame-01.webp" alt="Explore Danau Toba 5D4N" fetchpriority="high" decoding="async">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 2 — Pricelist                        -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-02.webp" alt="Pricelist" loading="lazy">
+        <img src="assets/5d4n/frame-02.webp" alt="Pricelist" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 3 — Include / Exclude / Tour Guide   -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-03.webp" alt="Include Exclude Tour Guide" loading="lazy">
+        <img src="assets/5d4n/frame-03.webp" alt="Include Exclude Tour Guide" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 4 — Gambar + Video Hotel Day 1       -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame-video">
-        <img src="assets/5d4n/frame-04.webp" alt="Hotel Day 1 Ello Paropo" class="frame-bg" loading="lazy">
-        <video controls  loop muted playsinline preload="metadata">
+        <img src="assets/5d4n/frame-04.webp" alt="Hotel Day 1 Ello Paropo" class="frame-bg" decoding="async" loading="lazy">
+        <video controls  loop muted playsinline preload="none">
             <source src="assets/5d4n/hotel-day1-web.mp4" type="video/mp4">
         </video>
         <div class="vid-label">Video Hotel Yang Akan Digunakan — Hotel Day 1<br>Ello Hotel Paropo</div>
@@ -264,8 +283,8 @@
     <!-- FRAME 5 — Gambar + Video Hotel Day 2       -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame-video">
-        <img src="assets/5d4n/frame-05.webp" alt="Hotel Day 2 Hope Villa" class="frame-bg" loading="lazy">
-        <video controls  loop muted playsinline preload="metadata">
+        <img src="assets/5d4n/frame-05.webp" alt="Hotel Day 2 Hope Villa" class="frame-bg" decoding="async" loading="lazy">
+        <video controls  loop muted playsinline preload="none">
             <source src="assets/5d4n/hotel-day2-web.mp4" type="video/mp4">
         </video>
         <div class="vid-label">Video Hotel Yang Akan Digunakan — Hotel Day 2<br>Hope Villa</div>
@@ -275,8 +294,8 @@
     <!-- FRAME 6 — Gambar + Video Hotel Day 3       -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame-video">
-        <img src="assets/5d4n/frame-06.webp" alt="Hotel Day 3 Camping Holbung" class="frame-bg" loading="lazy">
-        <video controls  loop muted playsinline preload="metadata">
+        <img src="assets/5d4n/frame-06.webp" alt="Hotel Day 3 Camping Holbung" class="frame-bg" decoding="async" loading="lazy">
+        <video controls  loop muted playsinline preload="none">
             <source src="assets/5d4n/hotel-day3-web.mp4" type="video/mp4">
         </video>
         <div class="vid-label">Video Hotel Yang Akan Digunakan — Hotel Day 3<br>Camping Holbung</div>
@@ -286,8 +305,8 @@
     <!-- FRAME 7 — Gambar + Video Hotel Day 4       -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame-video">
-        <img src="assets/5d4n/frame-07.webp" alt="Hotel Day 4 Samosir Cottages" class="frame-bg" loading="lazy">
-        <video controls  loop muted playsinline preload="metadata">
+        <img src="assets/5d4n/frame-07.webp" alt="Hotel Day 4 Samosir Cottages" class="frame-bg" decoding="async" loading="lazy">
+        <video controls  loop muted playsinline preload="none">
             <source src="assets/5d4n/hotel-day4-web.mp4" type="video/mp4">
         </video>
         <div class="vid-label">Video Hotel Yang Akan Digunakan — Hotel Day 4<br>Samosir Cottages</div>
@@ -302,13 +321,13 @@
         <div class="drone-grid-2">
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE DJI MAVIC 4 PRO</div>
-                <video controls  loop muted playsinline preload="metadata">
+                <video controls  loop muted playsinline preload="none">
                     <source src="assets/5d4n/drone-1-web.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MAVIC 4 PRO</div>
-                <video controls  loop muted playsinline preload="metadata">
+                <video controls  loop muted playsinline preload="none">
                     <source src="assets/5d4n/drone-2-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -317,7 +336,7 @@
         <div class="drone-grid-1">
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MINI 3 & MAVIC 4 PRO</div>
-                <video controls  loop muted playsinline preload="metadata">
+                <video controls  loop muted playsinline preload="none">
                     <source src="assets/5d4n/drone-3-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -331,13 +350,13 @@
         <div class="drone-grid-2">
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE FPV DJI AVATA 360</div>
-                <video controls  loop muted playsinline preload="metadata">
+                <video controls  loop muted playsinline preload="none">
                     <source src="assets/5d4n/drone-4-web.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DRONE DJI MINI 3</div>
-                <video controls  loop muted playsinline preload="metadata">
+                <video controls  loop muted playsinline preload="none">
                     <source src="assets/5d4n/drone-5-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -353,42 +372,42 @@
     <!-- FRAME 9 — Contoh Video Lanjutan            -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-09.webp" alt="Contoh Hasil Video" loading="lazy">
+        <img src="assets/5d4n/frame-09.webp" alt="Contoh Hasil Video" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 10 — Special Welcome Bouquet         -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-10.webp" alt="Special Welcome Bouquet Bunga" loading="lazy">
+        <img src="assets/5d4n/frame-10.webp" alt="Special Welcome Bouquet Bunga" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 11 — Mengapa Memilih Kami            -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-11.webp" alt="Mengapa Memilih Kami" loading="lazy">
+        <img src="assets/5d4n/frame-11.webp" alt="Mengapa Memilih Kami" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 12 — No Scam & Perizinan             -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-12.webp" alt="No Scam Perizinan" loading="lazy">
+        <img src="assets/5d4n/frame-12.webp" alt="No Scam Perizinan" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 13 — Note                            -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-13.webp" alt="Note" loading="lazy">
+        <img src="assets/5d4n/frame-13.webp" alt="Note" decoding="async" loading="lazy">
     </div>
 
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAME 14 — Terimakasih & Kontak            -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/5d4n/frame-14.webp" alt="Terimakasih" loading="lazy">
+        <img src="assets/5d4n/frame-14.webp" alt="Terimakasih" decoding="async" loading="lazy">
     </div>
 
     <!-- ── Floating WhatsApp ── -->
@@ -400,39 +419,62 @@
     
     
     
-    <!-- ── Auto-Play on Scroll Script ── -->
+    <!-- ── Auto-Play on Scroll + Performance Script ── -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videos = document.querySelectorAll('video');
             let audioUnlocked = false;
 
+            // ── Toast notifikasi ──
+            function showToast(msg) {
+                const t = document.createElement('div');
+                t.textContent = msg;
+                t.style.cssText = [
+                    'position:fixed', 'bottom:90px', 'left:50%',
+                    'transform:translateX(-50%)',
+                    'background:rgba(0,0,0,0.72)', 'color:#fff',
+                    'padding:10px 22px', 'border-radius:30px',
+                    'font-size:13px', 'font-family:Arial,sans-serif',
+                    'font-weight:600', 'letter-spacing:0.3px',
+                    'z-index:9999', 'pointer-events:none',
+                    'transition:opacity 0.5s', 'white-space:nowrap'
+                ].join(';');
+                document.body.appendChild(t);
+                setTimeout(() => {
+                    t.style.opacity = '0';
+                    setTimeout(() => t.remove(), 500);
+                }, 2500);
+            }
+
+            // Tampilkan hint suara setelah 1.5 detik
+            setTimeout(() => showToast('👆 Ketuk layar untuk aktifkan suara'), 1500);
+
+            // ── Unlock audio saat user pertama kali tap/klik ──
             function unlockAudio() {
                 if (audioUnlocked) return;
                 audioUnlocked = true;
-                // Langsung unmute semua video yang sedang play saat ini
-                videos.forEach(v => {
-                    if (!v.paused) {
-                        v.muted = false;
-                    }
-                });
+                videos.forEach(v => { if (!v.paused) v.muted = false; });
             }
-
-            // Unlock saat user pertama kali tap/klik di mana saja
             document.addEventListener('click', unlockAudio, { once: true });
             document.addEventListener('touchstart', unlockAudio, { once: true });
 
+            // ── IntersectionObserver: play/pause + fade-in ──
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const video = entry.target;
                     if (entry.isIntersecting) {
                         video.muted = !audioUnlocked;
-                        video.play().catch(() => {
-                            // Browser blokir suara → fallback muted
-                            video.muted = true;
-                            video.play().catch(() => {});
-                        });
+                        video.play()
+                            .then(() => video.classList.add('is-playing'))
+                            .catch(() => {
+                                video.muted = true;
+                                video.play()
+                                    .then(() => video.classList.add('is-playing'))
+                                    .catch(() => {});
+                            });
                     } else {
                         video.pause();
+                        video.classList.remove('is-playing');
                     }
                 });
             }, { threshold: 0.3 });
@@ -445,5 +487,6 @@
     </script>
 </body>
 </html>
+
 
 

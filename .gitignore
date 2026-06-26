@@ -1,0 +1,6 @@
+# PDF sumber (terlalu besar untuk GitHub)
+*.pdf
+
+# File sistem
+.DS_Store
+Thumbs.db

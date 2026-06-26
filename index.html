@@ -209,7 +209,7 @@
 
         .card:hover {
             border-color: var(--accent);
-            transform: translateY(-4px);
+            
             background: rgba(255, 255, 255, 0.06);
         }
 
@@ -303,7 +303,17 @@
         .social-btn:hover {
             color: var(--accent);
             border-color: var(--accent);
-            transform: translateY(-3px);
+            
+        }
+
+        .section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0.7;
+            margin: 8px 4px 4px;
         }
 
         .copy {
@@ -348,13 +358,10 @@
         @keyframes textReveal {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: none; }
         }
 
         @keyframes cardReveal {
@@ -442,14 +449,15 @@
                 height: 54px;
             }
         }
+        .floating-wa svg { fill: #fff; width: 32px; height: 32px; }
     </style>
 </head>
 
 <body>
     <!-- Background Content -->
     <div class="bg-container">
-        <img class="bg-image" src="https://i.pinimg.com/1200x/9b/f7/aa/9bf7aa222e1ca7278f43330dda1828ee.jpg"
-            alt="Beautiful Lake Toba" />
+        <img class="bg-image" src="assets/danau-toba.png"
+            alt="Beautiful Lake Toba" loading="lazy" />
         <div class="bg-overlay"></div>
     </div>
 
@@ -461,7 +469,7 @@
             <div class="avatar-wrap">
                 <div class="avatar-glow"></div>
                 <div class="avatar">
-                    <img src="assets/avatar.jpg" alt="JWS Profile"
+                    <img src="assets/avatar.jpg" alt="JWS Profile" loading="lazy"
                         onerror="this.src='https://ui-avatars.com/api/?name=Jelajah+Sumatera&background=1a1a0e&color=E5C185'" />
                 </div>
             </div>
@@ -470,6 +478,51 @@
         </header>
 
         <main class="links">
+
+            <!-- ── Paket Trip ── -->
+            <div class="section-label">Paket Trip</div>
+
+            <a href="trip-2d1n.html" class="card">
+                <div class="icon">🌅</div>
+                <div class="info">
+                    <span class="title">Explore Danau Toba — 2D1N</span>
+                    <span class="subtitle">Private Trip 2 Hari 1 Malam</span>
+                </div>
+                <span class="chevron">→</span>
+            </a>
+
+            <a href="trip-3d2n.html" class="card">
+                <div class="icon">🏔️</div>
+                <div class="info">
+                    <span class="title">Explore Danau Toba — 3D2N</span>
+                    <span class="subtitle">Private Trip 3 Hari 2 Malam</span>
+                </div>
+                <span class="chevron">→</span>
+            </a>
+
+            <a href="trip-4d3n.html" class="card">
+                <div class="icon">🌊</div>
+                <div class="info">
+                    <span class="title">Explore Danau Toba — 4D3N</span>
+                    <span class="subtitle">Private Trip 4 Hari 3 Malam</span>
+                </div>
+                <span class="chevron">→</span>
+            </a>
+
+            <a href="trip-5d4n.html" class="card">
+                <div class="icon">✨</div>
+                <div class="info">
+                    <span class="title">Explore Danau Toba — 5D4N</span>
+                    <span class="subtitle">Private Trip 5 Hari 4 Malam</span>
+                </div>
+                <span class="chevron">→</span>
+            </a>
+
+            <div class="sep"></div>
+
+            <!-- ── Lainnya ── -->
+            <div class="section-label">Lainnya</div>
+
             <a href="blog.html" class="card">
                 <div class="icon">📖</div>
                 <div class="info">
@@ -532,13 +585,8 @@
     </div>
 
     <!-- Floating WhatsApp -->
-    <a href="https://wa.me/6285272388532" class="floating-wa" target="_blank" aria-label="Chat on WhatsApp">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            <path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-            <path
-                d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.99-1.418A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.982 7.982 0 01-4.078-1.118L5.5 19.5l.64-2.33A7.955 7.955 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z" />
-        </svg>
+    <a href="https://wa.me/6285272388532" class="floating-wa" target="_blank" aria-label="Chat WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.5 4.5-9.9 9.9-9.9 5.5 0 9.9 4.5 9.9 9.9s-4.4 9.8-9.9 9.8zm5.5-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"></path></svg>
     </a>
 
     <!-- Micro-interaction Script -->

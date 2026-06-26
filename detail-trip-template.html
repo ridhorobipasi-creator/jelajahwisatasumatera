@@ -120,7 +120,7 @@
 
         .btn-wa:hover {
             background: #20BA5A;
-            transform: translateY(-2px);
+            
         }
     </style>
 </head>
@@ -155,6 +155,63 @@
             </div>
         </main>
     </div>
+
+    
+    
+    
+    <!-- ── Auto-Play on Scroll Script ── -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videos = document.querySelectorAll('video');
+            let audioUnlocked = false;
+            
+            // 1. Tangkap jika user melakukan interaksi klik di manapun
+            document.body.addEventListener('click', () => {
+                audioUnlocked = true;
+            }, { once: true });
+
+            // 2. Tangkap jika user manual menghidupkan suara (lewat tombol volume)
+            videos.forEach(v => {
+                v.addEventListener('volumechange', () => {
+                    if (!v.muted) {
+                        audioUnlocked = true;
+                    }
+                });
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    
+                    if (entry.isIntersecting) {
+                        // Jika video masuk ke layar
+                        if (audioUnlocked) {
+                            video.muted = false;
+                        }
+                        
+                        let p = video.play();
+                        if (p !== undefined) {
+                            p.catch(() => {
+                                // Jika browser nge-blokir suara karena user belum pernah klik webnya
+                                video.muted = true;
+                                video.play();
+                            });
+                        }
+                    } else {
+                        // Jika video keluar layar
+                        video.pause();
+                    }
+                });
+            }, { 
+                threshold: 0.1 
+            });
+
+            videos.forEach(video => {
+                video.loop = true;
+                observer.observe(video);
+            });
+        });
+    </script>
 </body>
 
 </html>

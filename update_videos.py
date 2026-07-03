@@ -208,7 +208,7 @@ html_drone = """
                     <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE DJI MAVIC 4 PRO</div>
                     <div class="vid-wrapper">
                         <video loop muted playsinline preload="metadata">
-                            <source src="assets/5d4n/drone-1-web.mp4" type="video/mp4">
+                            <source src="assets/5d4n/drone-1-web.mp4#t=0.001" type="video/mp4">
                         </video>
                         <div class="play-overlay"></div>
                     </div>
@@ -217,7 +217,7 @@ html_drone = """
                     <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MAVIC 4 PRO</div>
                     <div class="vid-wrapper">
                         <video loop muted playsinline preload="metadata">
-                            <source src="assets/5d4n/drone-2-web.mp4" type="video/mp4">
+                            <source src="assets/5d4n/drone-2-web.mp4#t=0.001" type="video/mp4">
                         </video>
                         <div class="play-overlay"></div>
                     </div>
@@ -229,7 +229,7 @@ html_drone = """
                     <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MINI 3 & MAVIC 4 PRO</div>
                     <div class="vid-wrapper">
                         <video loop muted playsinline preload="metadata">
-                            <source src="assets/5d4n/drone-3-web.mp4" type="video/mp4">
+                            <source src="assets/5d4n/drone-3-web.mp4#t=0.001" type="video/mp4">
                         </video>
                         <div class="play-overlay"></div>
                     </div>
@@ -243,7 +243,7 @@ html_drone = """
                     <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE FPV DJI AVATA 360</div>
                     <div class="vid-wrapper">
                         <video loop muted playsinline preload="metadata">
-                            <source src="assets/5d4n/drone-4-web.mp4" type="video/mp4">
+                            <source src="assets/5d4n/drone-4-web.mp4#t=0.001" type="video/mp4">
                         </video>
                         <div class="play-overlay"></div>
                     </div>
@@ -252,7 +252,7 @@ html_drone = """
                     <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DRONE DJI MINI 3</div>
                     <div class="vid-wrapper">
                         <video loop muted playsinline preload="metadata">
-                            <source src="assets/5d4n/drone-5-web.mp4" type="video/mp4">
+                            <source src="assets/5d4n/drone-5-web.mp4#t=0.001" type="video/mp4">
                         </video>
                         <div class="play-overlay"></div>
                     </div>
@@ -292,7 +292,7 @@ def generate_hotel_html(days, folder):
                     <div class="vid-label">{hotels[i+j]}</div>
                     <div class="vid-wrapper">
                         <video loop muted playsinline preload="metadata">
-                            <source src="assets/{folder}/hotel-day{i+j+1}-web.mp4" type="video/mp4">
+                            <source src="assets/{folder}/hotel-day{i+j+1}-web.mp4#t=0.001" type="video/mp4">
                         </video>
                         <div class="play-overlay"></div>
                     </div>

@@ -68,13 +68,60 @@ css_to_add = """
             line-height: 1.2;
         }
 
-        .vid-card video {
+        /* -- Custom Video Wrapper for Reels-like Experience -- */
+        .vid-wrapper {
+            position: relative;
             width: 100%;
-            aspect-ratio: 9 / 16;
-            object-fit: cover;
+            padding-top: 177.77%; /* Fallback for older browsers (16:9) */
             border-radius: 8px;
+            overflow: hidden;
             background: #111;
+            cursor: pointer;
+        }
+        @supports (aspect-ratio: 9 / 16) {
+            .vid-wrapper {
+                padding-top: 0;
+                aspect-ratio: 9 / 16;
+            }
+        }
+        .vid-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
+        }
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .play-overlay::after {
+            content: '';
+            display: block;
+            border-style: solid;
+            border-width: 12px 0 12px 18px;
+            border-color: transparent transparent transparent #fff;
+            margin-left: 6px;
+        }
+        .vid-wrapper.is-playing .play-overlay {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.2);
         }
 
         .drone-alert {
@@ -108,17 +155,40 @@ js_to_add = """
     <!-- ── Video Controller Script ── -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const videos = document.querySelectorAll('video');
+            const wrappers = document.querySelectorAll('.vid-wrapper');
             
-            videos.forEach(video => {
+            wrappers.forEach(wrapper => {
+                const video = wrapper.querySelector('video');
+                if (!video) return;
+                
                 video.style.opacity = '1';
                 
+                // Toggle play/pause and unmute on click anywhere on the wrapper
+                wrapper.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.muted = false; // Unmute on first interaction
+                        video.play().catch(e => console.log('Playback prevented', e));
+                    } else {
+                        video.pause();
+                    }
+                });
+                
                 video.addEventListener('play', () => {
-                    videos.forEach(v => {
+                    wrapper.classList.add('is-playing');
+                    // Pause other videos automatically
+                    document.querySelectorAll('video').forEach(v => {
                         if (v !== video && !v.paused) {
                             v.pause();
                         }
                     });
+                });
+                
+                video.addEventListener('pause', () => {
+                    wrapper.classList.remove('is-playing');
+                });
+                
+                video.addEventListener('ended', () => {
+                    wrapper.classList.remove('is-playing');
                 });
             });
         });
@@ -136,24 +206,33 @@ html_drone = """
             <div class="drone-grid-2">
                 <div class="vid-card">
                     <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE DJI MAVIC 4 PRO</div>
-                    <video controls loop muted playsinline preload="metadata">
-                        <source src="assets/{folder}/drone-1-web.mp4" type="video/mp4">
-                    </video>
+                    <div class="vid-wrapper">
+                        <video loop muted playsinline preload="metadata">
+                            <source src="assets/{folder}/drone-1-web.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
                 </div>
                 <div class="vid-card">
                     <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MAVIC 4 PRO</div>
-                    <video controls loop muted playsinline preload="metadata">
-                        <source src="assets/{folder}/drone-2-web.mp4" type="video/mp4">
-                    </video>
+                    <div class="vid-wrapper">
+                        <video loop muted playsinline preload="metadata">
+                            <source src="assets/{folder}/drone-2-web.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
                 </div>
             </div>
 
             <div class="drone-grid-1">
                 <div class="vid-card">
                     <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MINI 3 & MAVIC 4 PRO</div>
-                    <video controls loop muted playsinline preload="metadata">
-                        <source src="assets/{folder}/drone-3-web.mp4" type="video/mp4">
-                    </video>
+                    <div class="vid-wrapper">
+                        <video loop muted playsinline preload="metadata">
+                            <source src="assets/{folder}/drone-3-web.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -162,15 +241,21 @@ html_drone = """
             <div class="drone-grid-2">
                 <div class="vid-card">
                     <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE FPV DJI AVATA 360</div>
-                    <video controls loop muted playsinline preload="metadata">
-                        <source src="assets/{folder}/drone-4-web.mp4" type="video/mp4">
-                    </video>
+                    <div class="vid-wrapper">
+                        <video loop muted playsinline preload="metadata">
+                            <source src="assets/{folder}/drone-4-web.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
                 </div>
                 <div class="vid-card">
                     <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DRONE DJI MINI 3</div>
-                    <video controls loop muted playsinline preload="metadata">
-                        <source src="assets/{folder}/drone-5-web.mp4" type="video/mp4">
-                    </video>
+                    <div class="vid-wrapper">
+                        <video loop muted playsinline preload="metadata">
+                            <source src="assets/{folder}/drone-5-web.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
                 </div>
             </div>
 
@@ -205,9 +290,12 @@ def generate_hotel_html(days, folder):
             if i + j < nights:
                 html += f'''                <div class="vid-card">
                     <div class="vid-label">{hotels[i+j]}</div>
-                    <video controls loop muted playsinline preload="metadata">
-                        <source src="assets/{folder}/hotel-day{i+j+1}-web.mp4" type="video/mp4">
-                    </video>
+                    <div class="vid-wrapper">
+                        <video loop muted playsinline preload="metadata">
+                            <source src="assets/{folder}/hotel-day{i+j+1}-web.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
                 </div>
 '''
         html += '            </div>\n'
@@ -229,22 +317,21 @@ for file, days, folder in files:
     with open(file, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    if '.custom-frame' not in content:
-        content = content.replace('</style>', css_to_add + '\n    </style>')
+    # Force rebuild the videos section
+    start_marker = '<!-- ═══════════════════════════════════════════ -->\\n        <!-- VIDEO HOTEL'
+    end_marker = '<!-- ===== MENGAPA MEMILIH KAMI ===== -->'
     
-    # insert videos before MENGAPA MEMILIH KAMI
-    if '<!-- ═══════════════════════════════════════════ -->\n        <!-- VIDEO HOTEL' not in content:
-        hotel_html = generate_hotel_html(days, folder)
-        drone_html = html_drone.format(folder=folder)
-        
-        target = '<!-- ===== MENGAPA MEMILIH KAMI ===== -->'
-        replacement = hotel_html + drone_html + '\n        ' + target
-        
-        content = content.replace(target, replacement)
+    # We replace everything between start_marker and end_marker with our new HTML
+    hotel_html = generate_hotel_html(days, folder)
+    drone_html = html_drone.format(folder=folder)
+    replacement = hotel_html + drone_html + '\\n        ' + end_marker
+    content = re.sub(r'<!-- ═══════════════════════════════════════════ -->\s*<!-- VIDEO HOTEL.*?<!-- ===== MENGAPA MEMILIH KAMI ===== -->', replacement, content, flags=re.DOTALL)
     
-    # replace scripts
-    if '<!-- ── Auto-Play on Scroll Script ── -->' in content:
-        content = re.sub(r'<!-- ── Auto-Play on Scroll Script ── -->.*?</body>', js_to_add, content, flags=re.DOTALL)
+    # Clean up old CSS block to replace it with the new one
+    content = re.sub(r'/\* ── Custom HTML Frames for Drone Videos ── \*/.*?</style>', css_to_add + '\\n    </style>', content, flags=re.DOTALL)
+    
+    # Clean up old JS and insert new one
+    content = re.sub(r'<!-- ── Video Controller Script ── -->.*?</body>', js_to_add, content, flags=re.DOTALL)
     
     with open(file, 'w', encoding='utf-8') as f:
         f.write(content)

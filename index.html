@@ -192,6 +192,7 @@
             gap: 10px;
             margin-bottom: 24px;
         }
+
         .pkg-btn {
             display: flex;
             flex-direction: column;
@@ -208,15 +209,18 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+
         .pkg-btn:hover {
             border-color: var(--accent);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
+
         .pkg-btn:hover .pkg-days {
             color: var(--accent);
         }
+
         .pkg-days {
             font-family: 'Syne', sans-serif;
             font-weight: 700;
@@ -225,6 +229,7 @@
             line-height: 1.1;
             transition: color 0.3s ease;
         }
+
         .pkg-nights {
             font-family: 'Inter', sans-serif;
             font-size: 9px;
@@ -238,6 +243,7 @@
         .gallery-section {
             margin-bottom: 20px;
         }
+
         .gallery-label {
             font-size: 9px;
             font-weight: 600;
@@ -248,17 +254,20 @@
             margin-bottom: 10px;
             display: block;
         }
+
         .gallery-viewport {
             overflow: hidden;
             border-radius: 16px;
             position: relative;
             touch-action: pan-y;
         }
+
         .gallery-track {
             display: flex;
             transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
             will-change: transform;
         }
+
         .gallery-slide {
             min-width: 100%;
             display: grid;
@@ -266,33 +275,38 @@
             grid-template-rows: 1fr 1fr;
             gap: 6px;
         }
+
         .gallery-slide img {
             width: 100%;
             aspect-ratio: 4 / 3;
             object-fit: cover;
             border-radius: 10px;
             display: block;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             transition: transform 0.4s ease, filter 0.4s ease;
         }
+
         .gallery-slide img:hover {
             transform: scale(1.03);
             filter: brightness(1.1);
         }
+
         .gallery-dots {
             display: flex;
             justify-content: center;
             gap: 6px;
             margin-top: 10px;
         }
+
         .gallery-dot {
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.25);
             transition: background 0.3s, width 0.3s;
             cursor: pointer;
         }
+
         .gallery-dot.active {
             background: var(--accent);
             width: 16px;
@@ -323,7 +337,7 @@
 
         .card:hover {
             border-color: var(--accent);
-            
+
             background: rgba(255, 255, 255, 0.06);
         }
 
@@ -417,7 +431,7 @@
         .social-btn:hover {
             color: var(--accent);
             border-color: var(--accent);
-            
+
         }
 
         .section-label {
@@ -472,10 +486,13 @@
         @keyframes textReveal {
             from {
                 opacity: 0;
-                
+
             }
 
-            to { opacity: 1; transform: none; }
+            to {
+                opacity: 1;
+                transform: none;
+            }
         }
 
         @keyframes cardReveal {
@@ -563,15 +580,19 @@
                 height: 54px;
             }
         }
-        .floating-wa svg { fill: #fff; width: 32px; height: 32px; }
+
+        .floating-wa svg {
+            fill: #fff;
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 
 <body>
     <!-- Background Content -->
     <div class="bg-container">
-        <img class="bg-image" src="assets/danau-toba.png"
-            alt="Beautiful Lake Toba" loading="lazy" />
+        <img class="bg-image" src="assets/danau-toba.png" alt="Beautiful Lake Toba" loading="lazy" />
         <div class="bg-overlay"></div>
     </div>
 
@@ -589,8 +610,10 @@
             </div>
             <h1 class="brand-name">
                 Jelajah Wisata Sumatera
-                <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle; margin-left: 2px; margin-bottom: 3px;">
-                    <polygon fill="#1D9BF0" points="12,2 14.1,4.7 17.5,4.7 18.5,7.9 21.2,9.6 20.2,12.7 21.2,15.8 18.5,17.5 17.5,20.7 14.1,20.7 12,23.4 9.9,20.7 6.5,20.7 5.5,17.5 2.8,15.8 3.8,12.7 2.8,9.6 5.5,7.9 6.5,4.7 9.9,4.7" />
+                <svg viewBox="0 0 24 24" width="20" height="20"
+                    style="vertical-align: middle; margin-left: 2px; margin-bottom: 3px;">
+                    <polygon fill="#1D9BF0"
+                        points="12,2 14.1,4.7 17.5,4.7 18.5,7.9 21.2,9.6 20.2,12.7 21.2,15.8 18.5,17.5 17.5,20.7 14.1,20.7 12,23.4 9.9,20.7 6.5,20.7 5.5,17.5 2.8,15.8 3.8,12.7 2.8,9.6 5.5,7.9 6.5,4.7 9.9,4.7" />
                     <polygon fill="#fff" points="10.5,17 6,12.5 7.4,11.1 10.5,14.2 17.6,7.1 19,8.5" />
                 </svg>
             </h1>
@@ -601,19 +624,23 @@
 
             <!-- ── Paket Trip (WA) ── -->
             <div class="pkg-row">
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%202D1N%20Danau%20Toba" class="pkg-btn" target="_blank">
+                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%202D1N%20Danau%20Toba"
+                    class="pkg-btn" target="_blank">
                     <span class="pkg-days">2D</span>
                     <span class="pkg-nights">1 Malam</span>
                 </a>
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%203D2N%20Danau%20Toba" class="pkg-btn" target="_blank">
+                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%203D2N%20Danau%20Toba"
+                    class="pkg-btn" target="_blank">
                     <span class="pkg-days">3D</span>
                     <span class="pkg-nights">2 Malam</span>
                 </a>
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%204D3N%20Danau%20Toba" class="pkg-btn" target="_blank">
+                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%204D3N%20Danau%20Toba"
+                    class="pkg-btn" target="_blank">
                     <span class="pkg-days">4D</span>
                     <span class="pkg-nights">3 Malam</span>
                 </a>
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%205D4N%20Danau%20Toba" class="pkg-btn" target="_blank">
+                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%205D4N%20Danau%20Toba"
+                    class="pkg-btn" target="_blank">
                     <span class="pkg-days">5D</span>
                     <span class="pkg-nights">4 Malam</span>
                 </a>
@@ -661,7 +688,8 @@
             <a href="https://wa.me/6285272388532" class="card" target="_blank">
                 <div class="icon">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12S18.6 0 12 0zm5.5 16.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/>
+                        <path
+                            d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12S18.6 0 12 0zm5.5 16.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z" />
                     </svg>
                 </div>
                 <div class="info">
@@ -672,14 +700,14 @@
             </a>
         </main>
 
-            <!-- ── Galeri Foto ── -->
-            <div class="gallery-section" style="display: none; margin-top: 24px;">
-                <span class="gallery-label">📸 Galeri Trip</span>
-                <div class="gallery-viewport" id="galleryViewport">
-                    <div class="gallery-track" id="galleryTrack"></div>
-                </div>
-                <div class="gallery-dots" id="galleryDots"></div>
+        <!-- ── Galeri Foto --── -->
+        <div class="gallery-section" style="display: none; margin-top: 24px;">
+            <span class="gallery-label">📸 Galeri Trip</span>
+            <div class="gallery-viewport" id="galleryViewport">
+                <div class="gallery-track" id="galleryTrack"></div>
             </div>
+            <div class="gallery-dots" id="galleryDots"></div>
+        </div>
 
         <div class="sep"></div>
 
@@ -695,7 +723,11 @@
 
     <!-- Floating WhatsApp -->
     <a href="https://wa.me/6285272388532" class="floating-wa" target="_blank" aria-label="Chat WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.5 4.5-9.9 9.9-9.9 5.5 0 9.9 4.5 9.9 9.9s-4.4 9.8-9.9 9.8zm5.5-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"></path></svg>
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.8 1 3.8 1.5 5.8 1.5 6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.5 4.5-9.9 9.9-9.9 5.5 0 9.9 4.5 9.9 9.9s-4.4 9.8-9.9 9.8zm5.5-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z">
+            </path>
+        </svg>
     </a>
 
     <!-- Gallery Script -->

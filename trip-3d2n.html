@@ -281,6 +281,108 @@
         .floating-wa svg { width: 28px; height: 28px; fill: #fff; }
 
         footer { text-align: center; font-size: 12px; font-weight: 500; color: #b8c4b2; margin-top: 48px; }
+    
+        /* ── Custom HTML Frames for Drone Videos ── */
+        .custom-frame {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            background: radial-gradient(circle at top right, #0d2611, #040a05);
+            padding: 40px 15px;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .drone-screen-2 {
+            background: radial-gradient(circle at bottom left, #0d2611, #040a05);
+            padding-top: 20px;
+            padding-bottom: 60px;
+        }
+
+        .drone-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .drone-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .drone-grid-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            padding: 0 15%;
+            margin-bottom: 24px;
+        }
+
+        .vid-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .vid-card .vid-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #e0f2e3;
+            text-transform: uppercase;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+        }
+
+        .vid-card video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #111;
+            display: block;
+        }
+
+        .drone-alert {
+            text-align: center;
+            margin-top: 32px;
+            padding: 0 10px;
+        }
+
+        .drone-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 12px;
+            border: 2px solid #25D366;
+            background: #fff;
+            padding: 2px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .drone-alert p {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #d8f5d6;
+            line-height: 1.5;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 0.3px;
+        }
+
     </style>
 </head>
 
@@ -409,6 +511,83 @@
 
         <hr>
 
+        
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- VIDEO HOTEL                                -->
+        <!-- ═══════════════════════════════════════════ -->
+        <div class="custom-frame drone-screen-1">
+            <h2 class="drone-title">(VIDEO HOTEL YANG AKAN DIGUNAKAN)</h2>
+            <div class="drone-grid-2">
+                <div class="vid-card">
+                    <div class="vid-label">HOTEL DAY 1<br>TBD</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/3d2n/hotel-day1-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="vid-card">
+                    <div class="vid-label">HOTEL DAY 2<br>TBD</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/3d2n/hotel-day2-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- DRONE VIDEOS (Screen 1 & 2)                                    -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <div class="custom-frame drone-screen-1">
+            <h2 class="drone-title">(HASIL VIDEO DRONE + EDITING)</h2>
+            
+            <div class="drone-grid-2">
+                <div class="vid-card">
+                    <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE DJI MAVIC 4 PRO</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/5d4n/drone-1-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="vid-card">
+                    <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MAVIC 4 PRO</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/5d4n/drone-2-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="drone-grid-1">
+                <div class="vid-card">
+                    <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MINI 3 & MAVIC 4 PRO</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/5d4n/drone-3-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <div class="custom-frame drone-screen-2">
+            <div class="drone-grid-2">
+                <div class="vid-card">
+                    <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE FPV DJI AVATA 360</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/5d4n/drone-4-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="vid-card">
+                    <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DRONE DJI MINI 3</div>
+                    <video controls loop muted playsinline preload="metadata">
+                        <source src="assets/5d4n/drone-5-web.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="drone-alert">
+                <img src="assets/avatar.jpg" alt="Logo Jelajahwisatasumatera" class="drone-logo">
+                <p>SEMUA VIDEO DIATAS ASLI DARI GEAR CAMERA DAN DRONE KAMI,<br>BUKAN AMBIL VIDEO ORANG LAIN!!</p>
+            </div>
+        </div>
+
+        <hr>
+
         <!-- ===== MENGAPA MEMILIH KAMI ===== -->
         <h2 class="sec">Mengapa Memilih Kami?</h2>
         <ul class="dot-list">
@@ -469,58 +648,25 @@
     
     
     
-    <!-- ── Auto-Play on Scroll Script ── -->
+    
+    <!-- ── Video Controller Script ── -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videos = document.querySelectorAll('video');
-            let audioUnlocked = false;
             
-            // 1. Tangkap jika user melakukan interaksi klik di manapun
-            document.body.addEventListener('click', () => {
-                audioUnlocked = true;
-            }, { once: true });
-
-            // 2. Tangkap jika user manual menghidupkan suara (lewat tombol volume)
-            videos.forEach(v => {
-                v.addEventListener('volumechange', () => {
-                    if (!v.muted) {
-                        audioUnlocked = true;
-                    }
-                });
-            });
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target;
-                    
-                    if (entry.isIntersecting) {
-                        // Jika video masuk ke layar
-                        if (audioUnlocked) {
-                            video.muted = false;
-                        }
-                        
-                        let p = video.play();
-                        if (p !== undefined) {
-                            p.catch(() => {
-                                // Jika browser nge-blokir suara karena user belum pernah klik webnya
-                                video.muted = true;
-                                video.play();
-                            });
-                        }
-                    } else {
-                        // Jika video keluar layar
-                        video.pause();
-                    }
-                });
-            }, { 
-                threshold: 0.1 
-            });
-
             videos.forEach(video => {
-                video.loop = true;
-                observer.observe(video);
+                video.style.opacity = '1';
+                
+                video.addEventListener('play', () => {
+                    videos.forEach(v => {
+                        if (v !== video && !v.paused) {
+                            v.pause();
+                        }
+                    });
+                });
             });
         });
     </script>
 </body>
+
 </html>

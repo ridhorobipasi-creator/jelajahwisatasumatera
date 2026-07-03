@@ -277,13 +277,13 @@
         <div class="drone-grid-2">
             <div class="vid-card">
                 <div class="vid-label">HOTEL DAY 1<br>Ello Hotel Paropo</div>
-                <video controls loop muted playsinline preload="none">
+                <video controls loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/hotel-day1-web.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="vid-card">
                 <div class="vid-label">HOTEL DAY 2<br>Hope Villa</div>
-                <video controls loop muted playsinline preload="none">
+                <video controls loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/hotel-day2-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -292,13 +292,13 @@
         <div class="drone-grid-2">
             <div class="vid-card">
                 <div class="vid-label">HOTEL DAY 3<br>Camping Holbung</div>
-                <video controls loop muted playsinline preload="none">
+                <video controls loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/hotel-day3-web.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="vid-card">
                 <div class="vid-label">HOTEL DAY 4<br>Samosir Cottages</div>
-                <video controls loop muted playsinline preload="none">
+                <video controls loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/hotel-day4-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -314,13 +314,13 @@
         <div class="drone-grid-2">
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE DJI MAVIC 4 PRO</div>
-                <video controls  loop muted playsinline preload="none">
+                <video controls  loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/drone-1-web.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MAVIC 4 PRO</div>
-                <video controls  loop muted playsinline preload="none">
+                <video controls  loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/drone-2-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -329,7 +329,7 @@
         <div class="drone-grid-1">
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DJI MINI 3 & MAVIC 4 PRO</div>
-                <video controls  loop muted playsinline preload="none">
+                <video controls  loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/drone-3-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -343,13 +343,13 @@
         <div class="drone-grid-2">
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>DRONE FPV DJI AVATA 360</div>
-                <video controls  loop muted playsinline preload="none">
+                <video controls  loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/drone-4-web.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="vid-card">
                 <div class="vid-label">CONTOH HASIL VIDEO<br>IPHONE 17 PRO + DRONE DJI MINI 3</div>
-                <video controls  loop muted playsinline preload="none">
+                <video controls  loop muted playsinline preload="metadata">
                     <source src="assets/5d4n/drone-5-web.mp4" type="video/mp4">
                 </video>
             </div>
@@ -412,69 +412,23 @@
     
     
     
-    <!-- ── Auto-Play on Scroll + Performance Script ── -->
+    <!-- ── Video Controller Script ── -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videos = document.querySelectorAll('video');
-            let audioUnlocked = false;
-
-            // ── Toast notifikasi ──
-            function showToast(msg) {
-                const t = document.createElement('div');
-                t.textContent = msg;
-                t.style.cssText = [
-                    'position:fixed', 'bottom:90px', 'left:50%',
-                    'transform:translateX(-50%)',
-                    'background:rgba(0,0,0,0.72)', 'color:#fff',
-                    'padding:10px 22px', 'border-radius:30px',
-                    'font-size:13px', 'font-family:Arial,sans-serif',
-                    'font-weight:600', 'letter-spacing:0.3px',
-                    'z-index:9999', 'pointer-events:none',
-                    'transition:opacity 0.5s', 'white-space:nowrap'
-                ].join(';');
-                document.body.appendChild(t);
-                setTimeout(() => {
-                    t.style.opacity = '0';
-                    setTimeout(() => t.remove(), 500);
-                }, 2500);
-            }
-
-            // Tampilkan hint suara setelah 1.5 detik
-            setTimeout(() => showToast('👆 Ketuk layar untuk aktifkan suara'), 1500);
-
-            // ── Unlock audio saat user pertama kali tap/klik ──
-            function unlockAudio() {
-                if (audioUnlocked) return;
-                audioUnlocked = true;
-                videos.forEach(v => { if (!v.paused) v.muted = false; });
-            }
-            document.addEventListener('click', unlockAudio, { once: true });
-            document.addEventListener('touchstart', unlockAudio, { once: true });
-
-            // ── IntersectionObserver: play/pause + fade-in ──
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target;
-                    if (entry.isIntersecting) {
-                        video.muted = !audioUnlocked;
-                        video.play()
-                            .then(() => video.classList.add('is-playing'))
-                            .catch(() => {
-                                video.muted = true;
-                                video.play()
-                                    .then(() => video.classList.add('is-playing'))
-                                    .catch(() => {});
-                            });
-                    } else {
-                        video.pause();
-                        video.classList.remove('is-playing');
-                    }
-                });
-            }, { threshold: 0.3 });
-
+            
+            // Set opacity ke 1 agar video terlihat (karena sebelumnya di-set opacity 0 di CSS)
             videos.forEach(video => {
-                video.loop = true;
-                observer.observe(video);
+                video.style.opacity = '1';
+                
+                // Pastikan saat ditekan play, video lain berhenti
+                video.addEventListener('play', () => {
+                    videos.forEach(v => {
+                        if (v !== video && !v.paused) {
+                            v.pause();
+                        }
+                    });
+                });
             });
         });
     </script>

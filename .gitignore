@@ -4,3 +4,11 @@
 # File sistem
 .DS_Store
 Thumbs.db
+
+# Video mentah / MOV (terlalu besar untuk GitHub >100MB)
+*.mov
+
+# Folder foto mentah / source
+assets/FOTO RM 4D3N-20260703T000810Z-3-001/
+assets/HOTEL 4D3N DANAU TOBA-20260703T010645Z-3-001/
+

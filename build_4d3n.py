@@ -28,16 +28,13 @@ def build():
     drone_match = re.search(r'(<!-- ══════════════════════════════════════════════════════════════ -->\s*<!-- FRAME 8a — Custom HTML Drone Videos \(Screen 1\).*?)(?=\s*<!-- ═══════════════════════════════════════════ -->\s*<!-- FRAME 9)', body_inner, re.DOTALL)
     drone_html = drone_match.group(1) if drone_match else ''
     
-    # Construct Image Frames 1-4
+    # Construct Image Frames
     frames_top = '''
     <!-- ═══════════════════════════════════════════ -->
     <!-- FRAMES TOP -->
     <!-- ═══════════════════════════════════════════ -->
     <div class="frame">
-        <img src="assets/4d3n/frame-01.webp" alt="Pricelist 4D3N Cover" fetchpriority="high" decoding="async">
-    </div>
-    <div class="frame">
-        <img src="assets/4d3n/frame-02.webp" alt="Frame 1" decoding="async" loading="lazy">
+        <img src="assets/4d3n/frame-02.webp" alt="Pricelist 4D3N Cover" fetchpriority="high" decoding="async">
     </div>
     <div class="frame">
         <img src="assets/4d3n/frame-03.webp" alt="Frame 2" decoding="async" loading="lazy">

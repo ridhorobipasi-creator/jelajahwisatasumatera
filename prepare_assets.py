@@ -33,24 +33,31 @@ VIDEO_EXT = {'.mp4', '.mov', '.m4v', '.avi'}
 # Angka di bawah dipilih supaya file jauh lebih ringan tapi masih tajam di layar HP.
 WEBP_QUALITY = 88
 LEBAR_GAMBAR = 1440    # foto di-resize ke lebar ini (3x lebar tampil)
-CRF = 20               # 20 = mata tidak bisa membedakan dari sumbernya
+CRF = 23               # 23 = masih tajam di layar; 20 dulu boros tanpa beda terlihat
 LEBAR_MAKS = None      # None = resolusi video dibiarkan asli, tidak dikecilkan
 PRESET = 'slow'        # encode lebih lama tapi file lebih kecil di kualitas sama
 AUDIO_BITRATE = '192k' # stereo penuh
 
-# Tiap video menghasilkan DUA berkas:
-#   nama-asli.mp4  = aliran gambar & suara sumber disalin apa adanya, tanpa
-#                    encode ulang. Kualitasnya identik bit demi bit dengan file
-#                    yang diberikan. Hanya wadahnya yang diganti ke .mp4 supaya
-#                    bisa dipanggil dari tag <video>.
-#   nama-web.mp4   = versi H.264 di atas, sebagai cadangan.
+# Atap bitrate. Tanpa ini CRF bebas membengkak di adegan bergerak cepat — video
+# drone switzerland dulu menembus 8,8 Mbps alias 304 MB untuk 5 menit, padahal
+# jatah Vercel Blob paket Hobby cuma 1 GB untuk SELURUH video. Atap ini membuat
+# satu berkas tidak bisa lagi diam-diam menghabiskan sepertiga kuota.
+MAXRATE = '4M'
+BUFSIZE = '8M'
+
+# Kalau True, tiap video juga menghasilkan nama-asli.mp4 — aliran sumber disalin
+# apa adanya tanpa encode ulang, kualitasnya identik dengan berkas yang diberikan.
 #
-# Kenapa perlu cadangan: hampir semua video sumber ber-codec HEVC (H.265),
-# sebagian malah 10-bit. Safari dan banyak HP bisa memutarnya, tapi Chrome di
-# Windows perlu codec berbayar dan Firefox tidak mendukung sama sekali. Halaman
-# menyodorkan versi asli lebih dulu; browser yang tidak sanggup otomatis
-# mengambil cadangan, bukan menampilkan kotak hitam.
-SALIN_ASLI = True
+# Dimatikan sejak 2026-07-28. Berkas itu hampir selalu HEVC (H.265): Safari bisa
+# memutarnya, tapi Chrome di Windows perlu codec berbayar dan Firefox tidak
+# mendukung sama sekali — jadi ia cuma melayani sebagian pengunjung sementara
+# ukurannya dua kali lipat versi web. Bersama-sama totalnya menembus batas 1 GB
+# Vercel Blob paket Hobby dan unggahan berhenti di tengah. Halaman sekarang
+# memakai satu berkas H.264 per video yang jalan di semua browser.
+#
+# Nyalakan lagi kalau pindah ke paket berbayar — build_trip.py tinggal
+# dikembalikan '-asli' ke AKHIRAN_VIDEO.
+SALIN_ASLI = False
 
 
 def urut_natural(nama):
@@ -134,6 +141,7 @@ def olah_video(sumber, tujuan, dry, hanya_asli=False):
         cmd += ['-vf', f"scale='min({LEBAR_MAKS},iw)':-2"]
     cmd += [
         '-vcodec', 'libx264', '-crf', str(CRF), '-preset', PRESET,
+        '-maxrate', MAXRATE, '-bufsize', BUFSIZE,      # atap bitrate, lihat catatan di atas
         '-profile:v', 'high', '-pix_fmt', 'yuv420p',   # 'high' lebih efisien di 1080p
         '-movflags', '+faststart',          # penting: video bisa diputar sebelum selesai diunduh
         '-acodec', 'aac', '-b:a', AUDIO_BITRATE,

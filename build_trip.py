@@ -23,9 +23,15 @@ Atur isi teks tiap paket di bagian PAKET di bawah.
 
 import os
 import re
+import subprocess
 import sys
 
 WA = "6285272388532"
+
+# Video tidak ikut ke GitHub (file mentah jauh di atas batas 100 MB per berkas),
+# melainkan disimpan di Vercel Blob. Kosongkan jadi "" kalau suatu saat video
+# dikembalikan ke dalam repo — sisa kodenya tidak perlu diubah.
+BASE_VIDEO = "https://gv9h2lmr3uf0fwll.public.blob.vercel-storage.com"
 
 # Label 5 video drone (sama untuk semua paket, ubah di sini kalau perlu)
 LABEL_DRONE = [
@@ -382,11 +388,52 @@ def blok_foto(paket, berkas, judul_komentar, prioritas_pertama=False):
     return out
 
 
-def kartu_video(label, src):
+def tipe_video(path_lokal):
+    """Atribut type untuk <source>, lengkap dengan nama codec-nya.
+
+    Nama codec ini yang membuat browser tahu ia sanggup atau tidak SEBELUM
+    mengunduh. Tanpa itu, browser yang tidak bisa HEVC tetap menarik file
+    ratusan MB lalu menampilkan kotak hitam, bukan pindah ke cadangan.
+    """
+    try:
+        hasil = subprocess.run(
+            ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
+             '-show_entries', 'stream=codec_tag_string', '-of', 'csv=p=0', path_lokal],
+            check=True, capture_output=True,
+        )
+        tag = hasil.stdout.decode(errors='ignore').strip()
+    except Exception:
+        tag = ''
+    if tag == 'hvc1':
+        return 'video/mp4; codecs=&quot;hvc1&quot;'
+    if tag == 'avc1':
+        return 'video/mp4; codecs=&quot;avc1.640028&quot;'
+    return 'video/mp4'
+
+
+def sumber_video(nama):
+    """Dua baris <source> untuk satu video: kualitas asli dulu, lalu cadangan.
+
+    `nama` berupa 'assets/5d4n/hotel-day1' — tanpa akhiran. Berkas -asli.mp4
+    berisi gambar & suara persis seperti yang diberikan (tanpa encode ulang);
+    -web.mp4 adalah versi H.264 untuk browser yang tidak mendukung HEVC.
+    """
+    baris = []
+    for akhiran in ('-asli', '-web'):
+        lokal = f"{nama}{akhiran}.mp4"
+        if not os.path.exists(lokal):
+            continue
+        url = f"{BASE_VIDEO}/{lokal}" if BASE_VIDEO else lokal
+        baris.append(f'                    <source src="{url}#t=0.001" '
+                     f'type="{tipe_video(lokal)}">')
+    return '\n'.join(baris)
+
+
+def kartu_video(label, nama):
     return f"""            <div class="vid-card">
                 <div class="vid-label">{label}</div>
                 <video controls loop muted playsinline preload="metadata">
-                    <source src="{src}#t=0.001" type="video/mp4">
+{sumber_video(nama)}
                 </video>
             </div>
 """
@@ -420,7 +467,7 @@ def blok_hotel(paket, cfg):
                 label = f"HOTEL DAY {n + 1}"
                 if nama[n]:
                     label += f"<br>{nama[n]}"
-            out += kartu_video(label, f"assets/{paket}/hotel-day{n + 1}-web.mp4")
+            out += kartu_video(label, f"assets/{paket}/hotel-day{n + 1}")
         out += '        </div>\n'
     out += f'\n        <p class="frame-note">{TEKS_HOTEL_BAWAH}</p>\n'
     out += '    </div>\n'
@@ -441,7 +488,7 @@ def blok_switzerland(cfg):
         <div class="solo-grid">
             <div class="vid-card">
                 <video controls loop muted playsinline preload="metadata">
-                    <source src="assets/{sumber}/switzerland-web.mp4#t=0.001" type="video/mp4">
+{sumber_video(f"assets/{sumber}/switzerland")}
                 </video>
             </div>
         </div>
@@ -454,7 +501,7 @@ def blok_drone(cfg):
     label = cfg.get("label_drone") or LABEL_DRONE
 
     def src(n):
-        return f"assets/{sumber}/drone-{n}-web.mp4"
+        return f"assets/{sumber}/drone-{n}"
 
     out = """
     <!-- ══════════════════════════════════════════════════════════════ -->
@@ -554,21 +601,20 @@ def bangun(paket, cfg, folder_keluar='.'):
     # Laporan + peringatan aset yang belum ada
     print(f"\n✓ {tujuan}")
     print(f"  foto : {len(frames)} ({len(atas)} di atas blok video, {len(bawah)} di bawah)")
+    def cek(dasar, kumpulan):
+        """Cukup salah satu dari -asli.mp4 / -web.mp4 yang ada."""
+        if not any(os.path.exists(f"{dasar}{a}.mp4") for a in ('-asli', '-web')):
+            kumpulan.append(f"{dasar}-*.mp4")
+
     hilang = []
     for n in range(1, cfg["video_hotel"] + 1):
-        p = os.path.join(folder_aset, f"hotel-day{n}-web.mp4")
-        if not os.path.exists(p):
-            hilang.append(p)
+        cek(os.path.join(folder_aset, f"hotel-day{n}"), hilang)
     sumber_drone = cfg.get("drone_dari") or paket
     for n in range(1, 6):
-        p = os.path.join('assets', sumber_drone, f"drone-{n}-web.mp4")
-        if not os.path.exists(p):
-            hilang.append(p)
+        cek(os.path.join('assets', sumber_drone, f"drone-{n}"), hilang)
     sumber_swiss = cfg.get("switzerland")
     if sumber_swiss:
-        p = os.path.join('assets', sumber_swiss, "switzerland-web.mp4")
-        if not os.path.exists(p):
-            hilang.append(p)
+        cek(os.path.join('assets', sumber_swiss, "switzerland"), hilang)
     print(f"  video: {cfg['video_hotel']} hotel + 5 drone (dari assets/{sumber_drone}/)"
           + (f" + switzerland (dari assets/{sumber_swiss}/)" if sumber_swiss else ""))
     if not frames:

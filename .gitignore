@@ -5,8 +5,18 @@ INI MASUKKAN SEMUA/
 *.pdf
 *.mov
 
+# ── Video paket: disimpan di Vercel Blob, bukan di sini ──
+# File mentahnya jauh di atas batas 100 MB per berkas yang dipaksakan GitHub.
+# Halaman memanggilnya lewat URL Blob (lihat BASE_VIDEO di build_trip.py).
+assets/*/*.mp4
+
 # ── Hasil uji coba generator ──
 preview/
+
+# ── Rahasia (jangan pernah ikut ke GitHub) ──
+.env
+.env.local
+.vercel/
 
 # ── Cache & file sistem ──
 __pycache__/

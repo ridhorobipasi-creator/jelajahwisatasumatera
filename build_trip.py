@@ -31,7 +31,11 @@ WA = "6285272388532"
 # Video tidak ikut ke GitHub (file mentah jauh di atas batas 100 MB per berkas),
 # melainkan disimpan di Vercel Blob. Kosongkan jadi "" kalau suatu saat video
 # dikembalikan ke dalam repo — sisa kodenya tidak perlu diubah.
-BASE_VIDEO = "https://gv9h2lmr3uf0fwll.public.blob.vercel-storage.com"
+#
+# Store: jelajahwisata-video, tersambung ke proyek jelajahwisatasumatera.
+# Unggah berkasnya dengan upload_blob.sh (baca BLOB_READ_WRITE_TOKEN dari
+# .env.local, yang diisi otomatis oleh `vercel link`).
+BASE_VIDEO = "https://qubhiargbkwdxwbe.public.blob.vercel-storage.com"
 
 # Label 5 video drone (sama untuk semua paket, ubah di sini kalau perlu)
 LABEL_DRONE = [
@@ -411,15 +415,29 @@ def tipe_video(path_lokal):
     return 'video/mp4'
 
 
-def sumber_video(nama):
-    """Dua baris <source> untuk satu video: kualitas asli dulu, lalu cadangan.
+# Akhiran berkas yang disodorkan ke browser, urut dari yang paling diutamakan.
+#
+# Dulu '-asli' (salinan utuh HEVC) ikut di sini sebagai pilihan pertama, tapi
+# dilepas: HEVC hanya bisa diputar Safari/iOS — Chrome di Windows dan Firefox
+# tidak — sementara ukurannya dua kali lipat dan membuat total video menembus
+# batas 1 GB Vercel Blob paket Hobby. Versi -web (H.264 1080p) jalan di semua
+# browser dan bedanya nyaris tak terlihat di layar.
+#
+# Kalau suatu saat pindah ke paket berbayar dan mau menghidupkan lagi jalur
+# kualitas sumber, cukup kembalikan '-asli' ke depan tuple ini — berkasnya
+# masih ada di assets/ dan sisa kodenya sudah menanganinya.
+AKHIRAN_VIDEO = ('-web',)
 
-    `nama` berupa 'assets/5d4n/hotel-day1' — tanpa akhiran. Berkas -asli.mp4
-    berisi gambar & suara persis seperti yang diberikan (tanpa encode ulang);
-    -web.mp4 adalah versi H.264 untuk browser yang tidak mendukung HEVC.
+
+def sumber_video(nama):
+    """Baris <source> untuk satu video, urut sesuai AKHIRAN_VIDEO.
+
+    `nama` berupa 'assets/5d4n/hotel-day1' — tanpa akhiran. Browser memakai
+    yang pertama yang sanggup ia putar; atribut type memuat nama codec supaya
+    ia tahu sanggup atau tidak sebelum mengunduh.
     """
     baris = []
-    for akhiran in ('-asli', '-web'):
+    for akhiran in AKHIRAN_VIDEO:
         lokal = f"{nama}{akhiran}.mp4"
         if not os.path.exists(lokal):
             continue

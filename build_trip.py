@@ -531,7 +531,7 @@ def bangun(paket, cfg, folder_keluar='.'):
 <body>
 
     <!-- ── Back Button ── -->
-    <a href="index.html" class="back-btn" title="Kembali ke Beranda">
+    <a href="/" class="back-btn" title="Kembali ke Beranda">
         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </a>
 {blok_foto(paket, atas, 'FOTO BAGIAN ATAS', prioritas_pertama=True)}{blok_hotel(paket, cfg)}{blok_drone(cfg)}{blok_switzerland(cfg)}{blok_foto(paket, bawah, 'FOTO BAGIAN BAWAH')}

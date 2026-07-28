@@ -1,14 +1,15 @@
-# PDF sumber (terlalu besar untuk GitHub)
+# ── File mentah / sumber (besar, tidak ikut ke GitHub) ──
+_sumber/
+assets/*/_masuk/
+INI MASUKKAN SEMUA/
 *.pdf
-
-# File sistem
-.DS_Store
-Thumbs.db
-
-# Video mentah / MOV (terlalu besar untuk GitHub >100MB)
 *.mov
 
-# Folder foto mentah / source
-assets/FOTO RM 4D3N-20260703T000810Z-3-001/
-assets/HOTEL 4D3N DANAU TOBA-20260703T010645Z-3-001/
+# ── Hasil uji coba generator ──
+preview/
 
+# ── Cache & file sistem ──
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

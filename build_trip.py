@@ -8,11 +8,21 @@ Cara pakai:
     python build_trip.py semua           # semua paket di PAKET
     python build_trip.py 4d3n --out preview/   # tulis ke folder lain (uji coba)
 
-Sumber foto/video diambil otomatis dari assets/<paket>/ :
-    frame-01.webp, frame-02.webp, ...   -> foto halaman, urut nomor
-    hotel-day1-web.mp4, ...             -> video hotel (1 per malam)
-    drone-1-web.mp4 ... drone-5-web.mp4 -> video drone
-    switzerland-web.mp4                 -> video "Switzerland Danau Toba"
+Foto diambil per paket, video disemat dari YouTube:
+
+    assets/<paket>/frame-01.webp, frame-02.webp, ...  -> foto halaman, urut nomor
+
+    assets/video/hotel-*.mp4              -> video hotel, dinamai menurut hotelnya
+    assets/video/drone-1..5-web.mp4       -> video drone, sama untuk semua paket
+    assets/video/switzerland-web.mp4      -> video "Switzerland Danau Toba"
+
+Berkas mp4 itu arsip lokal, bukan yang dilayani ke pengunjung: halaman menyemat
+videonya dari YouTube lewat peta YOUTUBE di bawah, dan menampilkan sampul dari
+assets/poster/ sampai pengunjung menekan play.
+
+Video sengaja tidak dipisah per paket: hotel yang sama dipakai beberapa paket,
+jadi satu berkas dipakai bersama-sama. Paket mana memakai video hotel yang mana
+diatur lewat "hotel_video" di bagian PAKET.
 
 Urutan halaman mengikuti deck aslinya:
     foto 1-3  ->  blok video hotel  ->  blok video drone
@@ -28,14 +38,65 @@ import sys
 
 WA = "6285272388532"
 
-# Video tidak ikut ke GitHub (file mentah jauh di atas batas 100 MB per berkas),
-# melainkan disimpan di Vercel Blob. Kosongkan jadi "" kalau suatu saat video
-# dikembalikan ke dalam repo — sisa kodenya tidak perlu diubah.
+# ── Video: disemat dari YouTube ────────────────────────────────────────
 #
-# Store: jelajahwisata-video, tersambung ke proyek jelajahwisatasumatera.
-# Unggah berkasnya dengan upload_blob.sh (baca BLOB_READ_WRITE_TOKEN dari
-# .env.local, yang diisi otomatis oleh `vercel link`).
-BASE_VIDEO = "https://qubhiargbkwdxwbe.public.blob.vercel-storage.com"
+# Dulu video dilayani sendiri lewat Vercel Blob. Itu mati pada 2026-08-02:
+# paket Hobby memberi 10 GB transfer sebulan dan situs ini memakai 21,4 GB
+# dalam 5 hari, jadi seluruh store diblokir dan semua video di keempat halaman
+# membalas 403 serentak. Satu halaman memanggil ratusan MB video — belasan
+# pengunjung yang menonton lengkap sudah menghabiskan jatah sebulan, artinya
+# situs yang laku justru yang paling cepat mati.
+#
+# YouTube tidak menagih transfer sama sekali, jadi masalah itu tidak bisa
+# terulang berapa pun ramainya pengunjung.
+#
+# Isi peta di bawah dengan ID video YouTube-nya — potongan 11 huruf di alamat
+# https://youtu.be/XXXXXXXXXXX atau .../watch?v=XXXXXXXXXXX. Kuncinya nama
+# berkas di assets/video/ tanpa akhiran '-web'.
+#
+# Video harus "Unlisted" (tidak publik tapi bisa disemat) atau "Public".
+# "Private" TIDAK bisa disemat — hasilnya kotak hitam di halaman.
+YOUTUBE = {
+    "hotel-samosir-cottages":  "",
+    "hotel-hope-villa":        "",
+    "hotel-hope-villa-2d1n":   "",
+    "hotel-ello":              "",
+    "hotel-camping-holbung":   "",
+    "drone-1":                 "",
+    "drone-2":                 "",
+    "drone-3":                 "",
+    "drone-4":                 "",
+    "drone-5":                 "",
+    "switzerland":             "",
+}
+
+# Gambar sampul kartu video, dibuat dari berkas video lokal:
+#
+#   ffmpeg -ss 1 -i assets/video/NAMA-web.mp4 -frames:v 1 \
+#          -vf scale=540:-2 -q:v 72 assets/poster/NAMA.webp
+#
+# Sampul ini dipakai supaya iframe YouTube tidak dimuat sebelum diklik. Sebelas
+# iframe sekaligus berarti sebelas player YouTube ikut diunduh saat halaman
+# dibuka — berat sekali di HP. Dengan sampul, yang dimuat awalnya cuma gambar
+# ±40 KB, dan player baru datang saat pengunjung benar-benar menekan play.
+#
+# Sampulnya ikut ke GitHub (kecil) dan dilayani Vercel, bukan YouTube — memakai
+# thumbnail bawaan YouTube tidak dipilih karena video tegak 9:16 diberi bilah
+# hitam kiri-kanan di sana.
+FOLDER_POSTER = "assets/poster"
+
+# SEMUA video duduk di satu folder ini, bukan dipisah per paket.
+#
+# Dulu tiap paket punya salinan videonya sendiri (assets/5d4n/hotel-day1-web.mp4,
+# assets/4d3n/hotel-day1-web.mp4, ...). Karena beberapa hotel dipakai lebih dari
+# satu paket, video yang sama tersimpan sampai 4 kali dengan alamat berbeda:
+# 918 MB simpanan padahal isinya cuma 671 MB. Lebih buruk lagi di sisi transfer —
+# pengunjung yang membandingkan beberapa paket mengunduh berkas yang sama
+# berulang kali karena browser melihatnya sebagai alamat berbeda.
+#
+# Sekarang satu video = satu berkas = satu alamat, dinamai menurut isinya
+# (nama hotel), bukan menurut hari ke berapa ia muncul di sebuah paket.
+FOLDER_VIDEO = "assets/video"
 
 # Label 5 video drone (sama untuk semua paket, ubah di sini kalau perlu)
 LABEL_DRONE = [
@@ -57,18 +118,25 @@ TEKS_SWISS = (
 
 # ══════════════════════════════════════════════════════════════════════
 #  KONFIGURASI TIAP PAKET
-#  - video_hotel  : jumlah kartu video hotel (biasanya = jumlah malam)
+#  - hotel_video  : nama berkas video hotel per malam, tanpa akhiran, dari
+#                   assets/video/. Jumlah isinya = jumlah malam/kartu video.
+#                   Paket yang menginap di hotel sama menyebut berkas yang sama —
+#                   di situlah penghematannya.
 #  - foto_atas    : berapa foto yang tampil SEBELUM blok video
 #                   (sisanya otomatis tampil setelah blok video)
 #  - hotel        : nama hotel per malam; "" kalau belum ada
 #  - label_hotel  : ganti total label kartu hotel (default "HOTEL DAY n")
 #  - judul_hotel  : ganti judul blok video hotel
-#  - drone_dari   : folder sumber video drone (dipakai bersama antar paket)
-#  - switzerland  : folder sumber switzerland-web.mp4; None = blok tidak dipakai
+#  - switzerland  : True kalau blok Switzerland Danau Toba ikut ditampilkan
+#
+#  Video drone sama untuk semua paket, jadi tidak perlu diatur di sini.
 # ══════════════════════════════════════════════════════════════════════
 PAKET = {
     "2d1n": {
-        "video_hotel": 2,          # 1 malam, tamu boleh pilih salah satu dari 2 hotel
+        # 1 malam, tamu boleh pilih salah satu dari 2 hotel.
+        # Hope Villa di sini editannya lain (72,6 detik) dari yang dipakai paket
+        # lain (67,5 detik) — sengaja berkas terpisah, bukan duplikat.
+        "hotel_video": ["hotel-samosir-cottages", "hotel-hope-villa-2d1n"],
         "foto_atas": 3,
         "judul": "Explore Danau Toba 2D1N — Jelajahwisatasumatera",
         "deskripsi": "Paket Private Trip 2 Hari 1 Malam ke Danau Toba bersama Jelajah Wisata Sumatera. Pengalaman eksklusif dengan dokumentasi drone profesional.",
@@ -78,12 +146,11 @@ PAKET = {
         "judul_hotel": "(VIDEO HOTEL YANG AKAN DIGUNAKAN)<br>(BOLEH PILIH SALAH SATU HOTEL YA)",
         "label_hotel": ["OPSI PERTAMA<br>SAMOSIR COTTAGES", "OPSI KEDUA<br>HOPE VILLA"],
         "hotel": [],
-        "drone_dari": "5d4n",
-        "switzerland": None,
+        "switzerland": False,
         "robots": "index, follow",
     },
     "3d2n": {
-        "video_hotel": 2,
+        "hotel_video": ["hotel-samosir-cottages", "hotel-hope-villa"],
         "foto_atas": 3,
         "judul": "Explore Danau Toba 3D2N — Jelajahwisatasumatera",
         "deskripsi": "Paket Private Trip 3 Hari 2 Malam ke Danau Toba bersama Jelajah Wisata Sumatera. Pengalaman eksklusif dengan dokumentasi drone profesional.",
@@ -91,12 +158,11 @@ PAKET = {
         "og_deskripsi": "Paket liburan premium 3 Hari 2 Malam ke Danau Toba. Harga terbaik sudah termasuk dokumentasi lengkap!",
         "wa_teks": "Halo, saya tertarik dengan Paket Trip 3D2N Danau Toba",
         "hotel": ["Samosir Cottages", "Hope Villa"],
-        "drone_dari": "5d4n",
-        "switzerland": None,
+        "switzerland": False,
         "robots": "index, follow",
     },
     "4d3n": {
-        "video_hotel": 3,
+        "hotel_video": ["hotel-ello", "hotel-hope-villa", "hotel-samosir-cottages"],
         "foto_atas": 3,
         "judul": "Explore Danau Toba 4D3N — Jelajahwisatasumatera",
         "deskripsi": "Paket Private Trip 4 Hari 3 Malam ke Danau Toba bersama Jelajah Wisata Sumatera. Pengalaman eksklusif dengan dokumentasi drone profesional.",
@@ -104,12 +170,12 @@ PAKET = {
         "og_deskripsi": "Paket liburan premium 4 Hari 3 Malam ke Danau Toba. Harga terbaik sudah termasuk dokumentasi lengkap!",
         "wa_teks": "Halo, saya tertarik dengan Paket Trip 4D3N Danau Toba",
         "hotel": ["Ello Hotel", "Hope Villa", "Samosir Cottages"],
-        "drone_dari": "5d4n",
-        "switzerland": "5d4n",
+        "switzerland": True,
         "robots": "index, follow",
     },
     "5d4n": {
-        "video_hotel": 4,
+        "hotel_video": ["hotel-ello", "hotel-hope-villa",
+                        "hotel-camping-holbung", "hotel-samosir-cottages"],
         "foto_atas": 3,
         "judul": "Explore Danau Toba 5D4N — Jelajahwisatasumatera",
         "deskripsi": "Paket Private Trip 5 Hari 4 Malam ke Danau Toba bersama Jelajah Wisata Sumatera. Pengalaman eksklusif dengan dokumentasi drone profesional.",
@@ -117,8 +183,7 @@ PAKET = {
         "og_deskripsi": "Paket liburan premium 5 Hari 4 Malam ke Danau Toba. Harga terbaik sudah termasuk dokumentasi lengkap!",
         "wa_teks": "Halo, saya tertarik dengan Paket Trip 5D4N Danau Toba",
         "hotel": ["Ello Hotel", "Hope Villa", "Camping Holbung", "Samosir Cottages"],
-        "drone_dari": "5d4n",
-        "switzerland": "5d4n",
+        "switzerland": True,
         "robots": "index, follow",
     },
 }
@@ -183,13 +248,13 @@ CSS = """        * { box-sizing: border-box; margin: 0; padding: 0; }
             display: block;
         }
 
-        /* ── Fade-in video saat mulai play ── */
-        video {
-            opacity: 0;
-            transition: opacity 0.35s ease;
+        /* ── Fade-in iframe YouTube saat baru dimasukkan ── */
+        .vid-card iframe {
+            animation: vid-muncul 0.35s ease;
         }
-        video.is-playing {
-            opacity: 1;
+        @keyframes vid-muncul {
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
 
         /* ── Blok video (hotel & drone) ── */
@@ -287,13 +352,61 @@ CSS = """        * { box-sizing: border-box; margin: 0; padding: 0; }
             line-height: 1.2;
         }
 
-        .vid-card video {
+        /* Sampul yang bisa diklik + iframe pengganti berbagi ukuran yang sama,
+           supaya tinggi kartu tidak berubah sedikit pun saat video dimuat. */
+        .vid-card .vid-play,
+        .vid-card iframe {
             width: 100%;
             aspect-ratio: 9 / 16;
-            object-fit: cover;
             border-radius: 8px;
             background: #111;
             display: block;
+            border: 0;
+        }
+
+        .vid-card .vid-play {
+            position: relative;
+            padding: 0;
+            cursor: pointer;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .vid-card .vid-play img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Tombol play — segitiga putih di dalam bulatan gelap */
+        .vid-card .vid-play-ikon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 52px;
+            height: 52px;
+            margin: -26px 0 0 -26px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .vid-card .vid-play-ikon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 54%;
+            transform: translate(-50%, -50%);
+            border-style: solid;
+            border-width: 9px 0 9px 15px;
+            border-color: transparent transparent transparent #fff;
+        }
+        .vid-card .vid-play:hover .vid-play-ikon,
+        .vid-card .vid-play:focus-visible .vid-play-ikon {
+            transform: scale(1.08);
+            background: rgba(0, 0, 0, 0.75);
         }
 
         .drone-alert {
@@ -342,17 +455,42 @@ CSS = """        * { box-sizing: border-box; margin: 0; padding: 0; }
 
 SCRIPT = """    <!-- ── Video Controller Script ── -->
     <script>
+        // Kartu video tampil sebagai gambar sampul dulu; iframe YouTube baru
+        // dipasang saat diklik, supaya membuka halaman tidak ikut mengunduh
+        // sebelas player sekaligus.
         document.addEventListener('DOMContentLoaded', () => {
-            const videos = document.querySelectorAll('video');
+            let main = null;   // { tombol, iframe } yang sedang diputar
 
-            videos.forEach(video => {
-                video.style.opacity = '1';
+            // Kembalikan kartu yang sedang main ke wujud sampulnya. Ini juga
+            // yang menghentikan videonya — iframe-nya memang dibuang, jadi
+            // tidak ada player yang diam-diam terus jalan di latar.
+            const tutup = () => {
+                if (!main) return;
+                main.iframe.replaceWith(main.tombol);
+                main = null;
+            };
 
-                // Saat satu video diputar, video lain otomatis berhenti
-                video.addEventListener('play', () => {
-                    videos.forEach(v => {
-                        if (v !== video && !v.paused) v.pause();
-                    });
+            document.querySelectorAll('.vid-play').forEach(tombol => {
+                tombol.addEventListener('click', () => {
+                    tutup();   // hanya satu video boleh main sekaligus
+
+                    const id = tombol.dataset.yt;
+                    const iframe = document.createElement('iframe');
+                    // nocookie: YouTube tidak menaruh cookie pelacak sebelum
+                    // pengunjung benar-benar menonton.
+                    // loop butuh playlist berisi ID yang sama — itu memang
+                    // cara YouTube, bukan salah tulis.
+                    iframe.src = 'https://www.youtube-nocookie.com/embed/' + id +
+                        '?autoplay=1&playsinline=1&rel=0&modestbranding=1' +
+                        '&loop=1&playlist=' + id;
+                    iframe.title = tombol.getAttribute('aria-label') || 'Video';
+                    iframe.allow = 'accelerometer; autoplay; encrypted-media; ' +
+                        'gyroscope; picture-in-picture; web-share';
+                    iframe.allowFullscreen = true;
+                    iframe.loading = 'lazy';
+
+                    tombol.replaceWith(iframe);
+                    main = { tombol, iframe };
                 });
             });
         });
@@ -392,73 +530,65 @@ def blok_foto(paket, berkas, judul_komentar, prioritas_pertama=False):
     return out
 
 
-def tipe_video(path_lokal):
-    """Atribut type untuk <source>, lengkap dengan nama codec-nya.
+def id_youtube(nama):
+    """ID YouTube untuk satu video, dari peta YOUTUBE.
 
-    Nama codec ini yang membuat browser tahu ia sanggup atau tidak SEBELUM
-    mengunduh. Tanpa itu, browser yang tidak bisa HEVC tetap menarik file
-    ratusan MB lalu menampilkan kotak hitam, bukan pindah ke cadangan.
+    `nama` boleh berupa jalur ('assets/video/hotel-ello') atau nama saja —
+    yang dipakai cuma bagian terakhirnya.
+
+    Sengaja berhenti dengan galat kalau ID-nya kosong: lebih baik build gagal
+    dengan pesan jelas daripada menghasilkan halaman berisi kartu yang tidak
+    bisa diputar, karena kartu mati baru ketahuan setelah tayang.
     """
-    try:
-        hasil = subprocess.run(
-            ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
-             '-show_entries', 'stream=codec_tag_string', '-of', 'csv=p=0', path_lokal],
-            check=True, capture_output=True,
+    kunci = os.path.basename(nama)
+    if kunci not in YOUTUBE:
+        raise SystemExit(
+            f"[GAGAL] '{kunci}' belum ada di peta YOUTUBE di build_trip.py."
         )
-        tag = hasil.stdout.decode(errors='ignore').strip()
-    except Exception:
-        tag = ''
-    if tag == 'hvc1':
-        return 'video/mp4; codecs=&quot;hvc1&quot;'
-    if tag == 'avc1':
-        return 'video/mp4; codecs=&quot;avc1.640028&quot;'
-    return 'video/mp4'
-
-
-# Akhiran berkas yang disodorkan ke browser, urut dari yang paling diutamakan.
-#
-# Dulu '-asli' (salinan utuh HEVC) ikut di sini sebagai pilihan pertama, tapi
-# dilepas: HEVC hanya bisa diputar Safari/iOS — Chrome di Windows dan Firefox
-# tidak — sementara ukurannya dua kali lipat dan membuat total video menembus
-# batas 1 GB Vercel Blob paket Hobby. Versi -web (H.264 1080p) jalan di semua
-# browser dan bedanya nyaris tak terlihat di layar.
-#
-# Kalau suatu saat pindah ke paket berbayar dan mau menghidupkan lagi jalur
-# kualitas sumber, cukup kembalikan '-asli' ke depan tuple ini — berkasnya
-# masih ada di assets/ dan sisa kodenya sudah menanganinya.
-AKHIRAN_VIDEO = ('-web',)
-
-
-def sumber_video(nama):
-    """Baris <source> untuk satu video, urut sesuai AKHIRAN_VIDEO.
-
-    `nama` berupa 'assets/5d4n/hotel-day1' — tanpa akhiran. Browser memakai
-    yang pertama yang sanggup ia putar; atribut type memuat nama codec supaya
-    ia tahu sanggup atau tidak sebelum mengunduh.
-    """
-    baris = []
-    for akhiran in AKHIRAN_VIDEO:
-        lokal = f"{nama}{akhiran}.mp4"
-        if not os.path.exists(lokal):
-            continue
-        url = f"{BASE_VIDEO}/{lokal}" if BASE_VIDEO else lokal
-        baris.append(f'                    <source src="{url}#t=0.001" '
-                     f'type="{tipe_video(lokal)}">')
-    return '\n'.join(baris)
+    vid = YOUTUBE[kunci].strip()
+    if not vid:
+        raise SystemExit(
+            f"[GAGAL] ID YouTube untuk '{kunci}' masih kosong.\n"
+            f"        Unggah assets/video/{kunci}-web.mp4 ke YouTube sebagai\n"
+            f"        Unlisted, lalu isi ID-nya di peta YOUTUBE di build_trip.py."
+        )
+    return vid
 
 
 def kartu_video(label, nama):
+    """Satu kartu video: sampul yang bisa diklik, iframe menyusul kemudian.
+
+    Yang keluar bukan <iframe>, melainkan <button> berisi gambar sampul.
+    Skrip di bawah halaman menukarnya jadi iframe YouTube saat diklik — lihat
+    alasannya di komentar FOLDER_POSTER.
+    """
+    kunci = os.path.basename(nama)
+    vid = id_youtube(kunci)
+    poster = f"{FOLDER_POSTER}/{kunci}.webp"
+    if not os.path.exists(poster):
+        raise SystemExit(
+            f"[GAGAL] sampul {poster} tidak ada.\n"
+            f"        Buat dengan: ffmpeg -ss 1 -i assets/video/{kunci}-web.mp4 "
+            f"-frames:v 1 -vf scale=540:-2 -q:v 72 {poster}"
+        )
+    # Label dipakai ulang jadi teks alt, tapi <br> di dalamnya harus jadi spasi.
+    alt = re.sub(r'<br\s*/?>', ' ', label) if label else kunci.replace('-', ' ')
+    # Kartu Switzerland tidak berlabel — barisnya dibuang seluruhnya, bukan
+    # dibiarkan kosong, karena .vid-label punya min-height yang akan menyisakan
+    # celah di atas videonya.
+    baris_label = f'                <div class="vid-label">{label}</div>\n' if label else ''
     return f"""            <div class="vid-card">
-                <div class="vid-label">{label}</div>
-                <video controls loop muted playsinline preload="metadata">
-{sumber_video(nama)}
-                </video>
+{baris_label}                <button class="vid-play" data-yt="{vid}" aria-label="Putar video {alt}">
+                    <img src="{poster}" alt="{alt}" loading="lazy" decoding="async" width="540" height="960">
+                    <span class="vid-play-ikon" aria-hidden="true"></span>
+                </button>
             </div>
 """
 
 
-def blok_hotel(paket, cfg):
-    jumlah = cfg["video_hotel"]
+def blok_hotel(cfg):
+    berkas = list(cfg["hotel_video"])
+    jumlah = len(berkas)
     nama = list(cfg.get("hotel") or [])
     nama += [""] * (jumlah - len(nama))
 
@@ -485,7 +615,7 @@ def blok_hotel(paket, cfg):
                 label = f"HOTEL DAY {n + 1}"
                 if nama[n]:
                     label += f"<br>{nama[n]}"
-            out += kartu_video(label, f"assets/{paket}/hotel-day{n + 1}")
+            out += kartu_video(label, f"{FOLDER_VIDEO}/{berkas[n]}")
         out += '        </div>\n'
     out += f'\n        <p class="frame-note">{TEKS_HOTEL_BAWAH}</p>\n'
     out += '    </div>\n'
@@ -493,8 +623,7 @@ def blok_hotel(paket, cfg):
 
 
 def blok_switzerland(cfg):
-    sumber = cfg.get("switzerland")
-    if not sumber:
+    if not cfg.get("switzerland"):
         return ""
     return f"""
     <!-- ══════════════════════════════════════════════════════════════ -->
@@ -504,22 +633,16 @@ def blok_switzerland(cfg):
         <p class="swiss-intro">{TEKS_SWISS}</p>
 
         <div class="solo-grid">
-            <div class="vid-card">
-                <video controls loop muted playsinline preload="metadata">
-{sumber_video(f"assets/{sumber}/switzerland")}
-                </video>
-            </div>
-        </div>
+{kartu_video("", f"{FOLDER_VIDEO}/switzerland")}        </div>
     </div>
 """
 
 
 def blok_drone(cfg):
-    sumber = cfg.get("drone_dari") or cfg["_paket"]
     label = cfg.get("label_drone") or LABEL_DRONE
 
     def src(n):
-        return f"assets/{sumber}/drone-{n}"
+        return f"{FOLDER_VIDEO}/drone-{n}"
 
     out = """
     <!-- ══════════════════════════════════════════════════════════════ -->
@@ -560,7 +683,6 @@ def blok_drone(cfg):
 
 
 def bangun(paket, cfg, folder_keluar='.'):
-    cfg = dict(cfg, _paket=paket)
     folder_aset = os.path.join('assets', paket)
     frames = cari_frame(folder_aset)
     atas = frames[: cfg["foto_atas"]]
@@ -599,7 +721,7 @@ def bangun(paket, cfg, folder_keluar='.'):
     <a href="/" class="back-btn" title="Kembali ke Beranda">
         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </a>
-{blok_foto(paket, atas, 'FOTO BAGIAN ATAS', prioritas_pertama=True)}{blok_hotel(paket, cfg)}{blok_drone(cfg)}{blok_switzerland(cfg)}{blok_foto(paket, bawah, 'FOTO BAGIAN BAWAH')}
+{blok_foto(paket, atas, 'FOTO BAGIAN ATAS', prioritas_pertama=True)}{blok_hotel(cfg)}{blok_drone(cfg)}{blok_switzerland(cfg)}{blok_foto(paket, bawah, 'FOTO BAGIAN BAWAH')}
     <!-- ── Floating WhatsApp ── -->
     <a href="{wa_link}" class="floating-wa" target="_blank" aria-label="Chat WhatsApp">
         {SVG_WA}
@@ -625,23 +747,127 @@ def bangun(paket, cfg, folder_keluar='.'):
             kumpulan.append(f"{dasar}-*.mp4")
 
     hilang = []
-    for n in range(1, cfg["video_hotel"] + 1):
-        cek(os.path.join(folder_aset, f"hotel-day{n}"), hilang)
-    sumber_drone = cfg.get("drone_dari") or paket
+    for nama_berkas in cfg["hotel_video"]:
+        cek(os.path.join(FOLDER_VIDEO, nama_berkas), hilang)
     for n in range(1, 6):
-        cek(os.path.join('assets', sumber_drone, f"drone-{n}"), hilang)
-    sumber_swiss = cfg.get("switzerland")
-    if sumber_swiss:
-        cek(os.path.join('assets', sumber_swiss, "switzerland"), hilang)
-    print(f"  video: {cfg['video_hotel']} hotel + 5 drone (dari assets/{sumber_drone}/)"
-          + (f" + switzerland (dari assets/{sumber_swiss}/)" if sumber_swiss else ""))
+        cek(os.path.join(FOLDER_VIDEO, f"drone-{n}"), hilang)
+    if cfg.get("switzerland"):
+        cek(os.path.join(FOLDER_VIDEO, "switzerland"), hilang)
+    print(f"  video: {len(cfg['hotel_video'])} hotel + 5 drone"
+          + (" + switzerland" if cfg.get("switzerland") else "")
+          + f" (semua dari {FOLDER_VIDEO}/)")
     if not frames:
         print(f"  ! belum ada frame-NN.webp di {folder_aset}/ — halaman masih tanpa foto")
     for p in hilang:
         print(f"  ! video belum ada: {p}")
 
 
+def periksa():
+    """Pastikan tidak ada video yang tersimpan dua kali dengan isi sama.
+
+    Dulu tiap paket punya salinan videonya sendiri, jadi satu hotel bisa
+    tersimpan sampai 4 kali dengan alamat berbeda. Sejak video disemat dari
+    YouTube itu tidak lagi memakan kuota, tapi tetap merepotkan: tiap salinan
+    berarti satu unggahan lagi dan satu ID lagi yang harus diurus, dan kalau
+    videonya diperbarui gampang ada yang tertinggal.
+
+    Sekalian fungsi ini memastikan tiap video punya ID YouTube dan sampulnya.
+
+    Perbandingan md5 saja tidak cukup: video yang sama bisa dikompres terpisah
+    dari wadah berbeda (.mp4 vs .mov) dan menghasilkan byte yang lain. Karena
+    itu isi video dibandingkan lewat durasi + jumlah frame dari ffprobe.
+    """
+    masalah = 0
+
+    # 1. Video apa yang dipakai paket mana.
+    #
+    # Dulu ini dibaca dengan mencari '.mp4' di dalam trip-*.html. Sejak video
+    # disemat dari YouTube, halaman tidak lagi menyebut nama berkas sama sekali,
+    # jadi daftarnya dibaca langsung dari PAKET di berkas ini.
+    rujuk = {}
+    for paket, cfg in PAKET.items():
+        dipakai = list(cfg["hotel_video"]) + [f"drone-{n}" for n in range(1, 6)]
+        if cfg.get("switzerland"):
+            dipakai.append("switzerland")
+        for nama in dipakai:
+            rujuk.setdefault(f"{FOLDER_VIDEO}/{nama}-web.mp4", []).append(paket)
+
+    print(f"{sum(len(v) for v in rujuk.values())} rujukan video "
+          f"-> {len(rujuk)} berkas unik")
+
+    # 2. Tiap video harus punya berkasnya, ID YouTube-nya, dan sampulnya
+    for u in sorted(rujuk):
+        nama = os.path.basename(u)[:-len('-web.mp4')]
+        if not os.path.exists(u):
+            print(f"  ! tidak ada di komputer ini: {u}")
+            masalah += 1
+        if not YOUTUBE.get(nama, "").strip():
+            print(f"  ! ID YouTube masih kosong: {nama}")
+            masalah += 1
+        sampul = f"{FOLDER_POSTER}/{nama}.webp"
+        if not os.path.exists(sampul):
+            print(f"  ! sampul belum dibuat: {sampul}")
+            masalah += 1
+
+    # 2b. Entri peta yang tidak dipakai paket mana pun — biasanya sisa video
+    #     lama yang sudah dilepas, atau salah ketik nama.
+    terpakai = {os.path.basename(u)[:-len('-web.mp4')] for u in rujuk}
+    for nama in sorted(set(YOUTUBE) - terpakai):
+        print(f"  ! ada di peta YOUTUBE tapi tidak dipakai paket mana pun: {nama}")
+        masalah += 1
+
+    # 3. Tidak boleh ada dua berkas berbeda yang isinya sama
+    sidik = {}
+    for u in sorted(rujuk):
+        if not os.path.exists(u):
+            continue
+        try:
+            hasil = subprocess.run(
+                ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
+                 '-show_entries', 'stream=nb_frames,width,height',
+                 '-show_entries', 'format=duration', '-of', 'csv=p=0', u],
+                check=True, capture_output=True)
+            kunci = hasil.stdout.decode(errors='ignore').strip()
+        except Exception:
+            continue                      # ffprobe tidak ada — lewati saja
+        if kunci in sidik:
+            print(f"  ! isinya sama dengan {sidik[kunci]}: {u}")
+            print(f"      satukan jadi satu berkas, lalu tunjuk dari "
+                  f"\"hotel_video\" kedua paket")
+            masalah += 1
+        else:
+            sidik[kunci] = u
+
+    # 4. Video di folder tapi tidak dipakai siapa pun
+    if os.path.isdir(FOLDER_VIDEO):
+        di_disk = {f"{FOLDER_VIDEO}/{f}" for f in os.listdir(FOLDER_VIDEO)
+                   if f.endswith('.mp4')}
+        for u in sorted(di_disk - set(rujuk)):
+            print(f"  ! ada di folder tapi tidak dipakai halaman mana pun: {u} "
+                  f"({os.path.getsize(u)/10**6:.0f} MB)")
+            masalah += 1
+
+    # 5. Daftar unggahan: berkas mana, dipakai paket mana, ID-nya sudah ada belum
+    total = sum(os.path.getsize(u) for u in rujuk if os.path.exists(u))
+    print(f"\n{len(rujuk)} video / {total/10**6:.0f} MB untuk diunggah ke YouTube:")
+    for u in sorted(rujuk):
+        nama = os.path.basename(u)[:-len('-web.mp4')]
+        vid = YOUTUBE.get(nama, "").strip()
+        print(f"  {os.path.basename(u):<34} {len(rujuk[u])} paket "
+              f"({', '.join(rujuk[u])})  {vid or '— ID belum diisi'}")
+
+    print()
+    if masalah:
+        print(f"! {masalah} masalah ditemukan.")
+    else:
+        print("Bersih: satu video = satu berkas = satu ID YouTube.")
+    return 1 if masalah else 0
+
+
 if __name__ == '__main__':
+    if '--periksa' in sys.argv:
+        sys.exit(periksa())
+
     args = [a for a in sys.argv[1:] if not a.startswith('-')]
     keluar = '.'
     if '--out' in sys.argv:

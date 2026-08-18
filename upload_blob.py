@@ -32,11 +32,22 @@ import urllib.request
 BASE_VIDEO = "https://qubhiargbkwdxwbe.public.blob.vercel-storage.com"
 
 # Batas simpanan paket Hobby. Naikkan kalau sudah pindah ke paket berbayar.
-BATAS_BYTE = 1024 * 1024 * 1024
+#
+# PENTING — ini desimal (1 GB = 1.000.000.000 byte), bukan 1024^3.
+# Vercel menghitung begitu: waktu berkas lokal berjumlah 918 MiB, dashboard
+# menulis 962 MB. Dulu di sini tertulis 1024^3, yang memberi kelonggaran 74 MB
+# di atas batas asli — cukup untuk membuat unggahan berhenti di tengah padahal
+# skrip bilang masih muat.
+BATAS_BYTE = 1_000_000_000
+
+# Di atas ini skrip tetap jalan tapi memperingatkan. Menambah satu video 1080p
+# biasanya 30-100 MB, jadi ambang ini memberi aba-aba sebelum benar-benar mepet.
+AMBANG_WASPADA = 0.80
 
 
 def mb(n):
-    return n / (1024 * 1024)
+    """MB desimal — satuan yang sama dengan yang ditampilkan dashboard Vercel."""
+    return n / 1_000_000
 
 
 def baca_token():
@@ -110,17 +121,27 @@ def main():
         return 1
 
     total = sum(os.path.getsize(f) for f in berkas)
+    sisa = BATAS_BYTE - total
+    pakai = total / BATAS_BYTE
+
     print(f"{len(berkas)} video dirujuk halaman, total {mb(total):.0f} MB "
-          f"dari batas {mb(BATAS_BYTE):.0f} MB.")
+          f"dari batas {mb(BATAS_BYTE):.0f} MB ({pakai*100:.0f}%).")
+    print(f"Sisa ruang: {mb(sisa):.0f} MB "
+          f"— kira-kira muat {int(mb(sisa) // 60)} video 1080p lagi.")
 
     if total > BATAS_BYTE:
-        lebih = total - BATAS_BYTE
-        print(f"\n! Kelebihan {mb(lebih):.0f} MB. Unggahan akan berhenti di tengah "
-              f"kalau dipaksa.")
+        print(f"\n! Kelebihan {mb(-sisa):.0f} MB. Unggahan akan berhenti di tengah "
+              f"kalau dipaksa, sebagian video hidup sebagian mati.")
         print("  Kecilkan dulu yang paling boros:")
         for f in sorted(berkas, key=os.path.getsize, reverse=True)[:3]:
             print(f"    {mb(os.path.getsize(f)):6.0f} MB  {f}")
         return 1
+
+    if pakai >= AMBANG_WASPADA:
+        print(f"\n! Sudah {pakai*100:.0f}% dari batas. Yang paling boros:")
+        for f in sorted(berkas, key=os.path.getsize, reverse=True)[:3]:
+            print(f"    {mb(os.path.getsize(f)):6.0f} MB  {f}")
+        print("  Kecilkan salah satunya sebelum menambah video baru.")
 
     token = baca_token()
     if not token and not dry:

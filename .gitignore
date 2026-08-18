@@ -1,21 +1,25 @@
 # ── File mentah / sumber (besar, tidak ikut ke GitHub) ──
 _sumber/
 assets/*/_masuk/
-INI MASUKKAN SEMUA/
 *.pdf
 *.mov
 
-# ── Video paket: disimpan di Vercel Blob, bukan di sini ──
-# File mentahnya jauh di atas batas 100 MB per berkas yang dipaksakan GitHub.
-# Halaman memanggilnya lewat URL Blob (lihat BASE_VIDEO di build_trip.py).
+# ── Video: disemat dari YouTube, berkasnya tidak ikut ke sini ──
+# Berkasnya jauh di atas batas 100 MB per file yang dipaksakan GitHub. Halaman
+# menyematnya dari YouTube (lihat peta YOUTUBE di build_trip.py); yang ikut ke
+# repo cuma gambar sampulnya di assets/poster/.
+# assets/video/ tetap disimpan lokal sebagai arsip — dari situ sampul dibuat
+# dan dari situ pula video diunggah ulang kalau perlu.
 assets/*/*.mp4
 
 # ── Hasil uji coba generator ──
+# deploy.bat memakai `git add -A`, jadi berkas coba-coba di folder root harus
+# disebut di sini kalau tidak mau ikut terkirim ke situs.
 preview/
+_preview-*.html
 
 # ── Rahasia (jangan pernah ikut ke GitHub) ──
-.env
-.env.local
+.env*
 .vercel/
 
 # ── Cache & file sistem ──
@@ -23,6 +27,3 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
-
-.vercel
-.env*

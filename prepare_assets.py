@@ -1,18 +1,30 @@
 """
-Siapkan aset satu paket: rename + konversi + kompres.
+Siapkan aset: rename + konversi + kompres.
 
-Cara pakai:
-    1. Taruh semua file mentah (foto & video) ke folder  assets/<paket>/_masuk/
-       Nama file bebas — urutan mengikuti urutan nama file (natural sort).
-       Khusus video, beri kata "hotel" atau "drone" di nama filenya.
+FOTO per paket, VIDEO di satu folder bersama
+────────────────────────────────────────────
+Foto beda-beda tiap paket, tapi video hotel banyak yang dipakai bersama —
+Samosir Cottages misalnya muncul di keempat paket. Karena itu video tidak lagi
+disalin per paket (dulu berkas yang sama tersimpan sampai 4 kali), melainkan
+duduk di satu folder dan dipanggil bersama-sama.
+
+FOTO
+    1. Taruh foto ke  assets/<paket>/_masuk/
+       Nama bebas — urutan tampil mengikuti urutan nama (natural sort).
     2. Jalankan:  python prepare_assets.py 4d3n
-       Tambah --dry untuk melihat rencananya saja tanpa mengubah apa pun.
+    -> assets/<paket>/frame-01.webp, frame-02.webp, ...
 
-Hasilnya di assets/<paket>/ :
-    frame-01.webp, frame-02.webp, ...      (dari file gambar)
-    hotel-day1-web.mp4, hotel-day2-web.mp4 (dari video ber-nama "hotel")
-    drone-1-web.mp4, drone-2-web.mp4, ...  (dari video ber-nama "drone")
-    switzerland-web.mp4                    (dari video ber-nama "switzerland")
+VIDEO
+    1. Taruh video ke  assets/video/_masuk/
+       Nama berkasnya JADI nama video di web, jadi beri nama menurut isinya:
+           hotel-ello.mov  ->  assets/video/hotel-ello-web.mp4
+           drone-1.mp4     ->  assets/video/drone-1-web.mp4
+    2. Jalankan:  python prepare_assets.py video
+
+Tambah --dry untuk melihat rencananya saja tanpa mengubah apa pun.
+
+Setelah videonya jadi, daftarkan ke paket yang memakainya lewat "hotel_video"
+di bagian PAKET pada build_trip.py.
 """
 
 import os
@@ -28,6 +40,9 @@ except ImportError:
 
 GAMBAR_EXT = {'.png', '.jpg', '.jpeg', '.webp', '.heic'}
 VIDEO_EXT = {'.mp4', '.mov', '.m4v', '.avi'}
+
+# Semua video dari semua paket duduk di sini — lihat catatan di atas.
+FOLDER_VIDEO = os.path.join('assets', 'video')
 
 # Halaman ini lebarnya maksimal 480px, jadi aset tidak perlu resolusi penuh.
 # Angka di bawah dipilih supaya file jauh lebih ringan tapi masih tajam di layar HP.
@@ -188,30 +203,27 @@ def siapkan(paket, dry=False, hanya_asli=False):
         print(f"Tidak ada file di {inbox}.")
         return
 
-    gambar, hotel, drone, swiss, lain = [], [], [], [], []
+    gambar, video, lain = [], [], []
     for f in berkas:
         ext = os.path.splitext(f)[1].lower()
         if ext in GAMBAR_EXT:
             gambar.append(f)
         elif ext in VIDEO_EXT:
-            nama = f.lower()
-            if 'hotel' in nama:
-                hotel.append(f)
-            elif 'drone' in nama:
-                drone.append(f)
-            elif 'switzerland' in nama:
-                swiss.append(f)
-            else:
-                lain.append(f)
+            video.append(f)
         else:
             lain.append(f)
 
     print(f"\n=== PAKET {paket.upper()} {'(DRY RUN — tidak ada yang diubah)' if dry else ''} ===")
-    print(f"Ditemukan: {len(gambar)} gambar, {len(hotel)} video hotel, "
-          f"{len(drone)} video drone, {len(swiss)} video switzerland")
+    print(f"Ditemukan: {len(gambar)} gambar")
+    if video:
+        # Video di sini tidak lagi diproses: satu video sering dipakai beberapa
+        # paket, jadi tempatnya di folder bersama.
+        print(f"Dilewati ({len(video)} video): {', '.join(video)}")
+        print(f"  -> video sekarang diproses terpisah. Pindahkan ke "
+              f"{os.path.join(FOLDER_VIDEO, '_masuk')}/ lalu jalankan:")
+        print("     python prepare_assets.py video")
     if lain:
-        print(f"Dilewati (tidak dikenali): {', '.join(lain)}")
-        print("  -> beri kata 'hotel', 'drone', atau 'switzerland' pada nama file video agar terbaca.")
+        print(f"Dilewati (bukan gambar): {', '.join(lain)}")
     print()
 
     os.makedirs(folder, exist_ok=True)
@@ -223,25 +235,64 @@ def siapkan(paket, dry=False, hanya_asli=False):
             if olah_gambar(os.path.join(inbox, f), tujuan, dry):
                 berhasil += 1
 
-    for i, f in enumerate(hotel, start=1):
-        tujuan = os.path.join(folder, f"hotel-day{i}-web.mp4")
-        if olah_video(os.path.join(inbox, f), tujuan, dry, hanya_asli):
-            berhasil += 1
-
-    for i, f in enumerate(drone, start=1):
-        tujuan = os.path.join(folder, f"drone-{i}-web.mp4")
-        if olah_video(os.path.join(inbox, f), tujuan, dry, hanya_asli):
-            berhasil += 1
-
-    for f in swiss[:1]:
-        tujuan = os.path.join(folder, "switzerland-web.mp4")
-        if olah_video(os.path.join(inbox, f), tujuan, dry, hanya_asli):
-            berhasil += 1
-
-    print(f"\nSelesai. {berhasil} file siap di {folder}/")
+    print(f"\nSelesai. {berhasil} foto siap di {folder}/")
     if not dry:
         print(f"File mentah tetap ada di {inbox}/ (folder itu di-ignore git, aman).")
         print(f"Langkah berikutnya:  python build_trip.py {paket}")
+
+
+def nama_video(berkas):
+    """Nama berkas mentah -> nama video di web.
+
+    'HOTEL ELLO.mov' -> 'hotel-ello'. Nama inilah yang nanti disebut di
+    "hotel_video" pada build_trip.py, jadi sengaja dibuat mudah ditebak.
+    """
+    dasar = os.path.splitext(berkas)[0].lower()
+    return re.sub(r'[^a-z0-9]+', '-', dasar).strip('-')
+
+
+def siapkan_video(dry=False, hanya_asli=False):
+    """Kompres semua video di assets/video/_masuk/ ke assets/video/."""
+    inbox = os.path.join(FOLDER_VIDEO, '_masuk')
+
+    if not os.path.isdir(inbox):
+        os.makedirs(inbox, exist_ok=True)
+        print(f"Folder {inbox} dibuat. Taruh video mentah di situ, lalu jalankan lagi.")
+        return
+
+    berkas = sorted(
+        (f for f in os.listdir(inbox)
+         if os.path.isfile(os.path.join(inbox, f))
+         and os.path.splitext(f)[1].lower() in VIDEO_EXT),
+        key=urut_natural,
+    )
+    if not berkas:
+        print(f"Tidak ada video di {inbox}.")
+        return
+
+    print(f"\n=== VIDEO {'(DRY RUN — tidak ada yang diubah)' if dry else ''} ===")
+    print(f"Ditemukan {len(berkas)} video.\n")
+
+    os.makedirs(FOLDER_VIDEO, exist_ok=True)
+    berhasil = 0
+    dipakai = {}
+    for f in berkas:
+        nama = nama_video(f)
+        if nama in dipakai:
+            print(f"  ! {f} dan {dipakai[nama]} menghasilkan nama sama "
+                  f"('{nama}') — yang kedua dilewati.")
+            continue
+        dipakai[nama] = f
+        tujuan = os.path.join(FOLDER_VIDEO, f"{nama}-web.mp4")
+        if olah_video(os.path.join(inbox, f), tujuan, dry, hanya_asli):
+            berhasil += 1
+
+    print(f"\nSelesai. {berhasil} video siap di {FOLDER_VIDEO}/")
+    if not dry:
+        print(f"File mentah tetap ada di {inbox}/ (folder itu di-ignore git, aman).")
+        print("Langkah berikutnya: daftarkan video hotel ke paketnya lewat "
+              "\"hotel_video\" di build_trip.py,")
+        print("lalu:  python build_trip.py semua")
 
 
 if __name__ == '__main__':
@@ -250,7 +301,11 @@ if __name__ == '__main__':
     hanya_asli = '--hanya-asli' in sys.argv   # lewati foto & encode H.264 yang sudah jadi
     if not args:
         print(__doc__)
-        print("Contoh:  python prepare_assets.py 4d3n")
+        print("Contoh:  python prepare_assets.py 4d3n     (foto paket 4D3N)")
+        print("         python prepare_assets.py video    (semua video)")
         sys.exit(1)
     for paket in args:
-        siapkan(paket, dry=dry, hanya_asli=hanya_asli)
+        if paket == 'video':
+            siapkan_video(dry=dry, hanya_asli=hanya_asli)
+        else:
+            siapkan(paket, dry=dry, hanya_asli=hanya_asli)

@@ -153,6 +153,40 @@
             font-weight: 500;
         }
 
+        /* Mengapa Memilih Kami */
+        .why-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .why-list li {
+            position: relative;
+            padding-left: 24px;
+            font-size: 15px;
+            line-height: 1.75;
+            color: #ddd;
+        }
+
+        .why-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .why-list li.hl {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
         /* Itinerary Section */
         .iti-section {
             margin-top: 60px;
@@ -200,6 +234,60 @@
             font-size: 15px;
             font-weight: 400;
             color: #ddd;
+        }
+
+        /* Penutup */
+        .closing {
+            margin-top: 60px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .closing p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #ddd;
+            margin-bottom: 16px;
+        }
+
+        .closing a {
+            color: var(--accent);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .closing-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px;
+        }
+
+        .closing-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 15px;
+            line-height: 1.9;
+            color: #ddd;
+        }
+
+        .closing-list li::before {
+            content: "*";
+            position: absolute;
+            left: 4px;
+            color: var(--accent);
+        }
+
+        .closing-note {
+            padding: 16px 18px;
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        .closing-thanks {
+            margin-top: 24px;
+            color: var(--accent) !important;
+            font-weight: 600;
         }
 
         footer {
@@ -282,27 +370,52 @@
             <div style="margin-top: 60px; padding: 32px; background: rgba(212, 175, 55, 0.05); border-left: 3px solid var(--accent); border-radius: 8px;">
                 <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; margin-bottom: 20px; color: var(--accent);">Mengapa Memilih Kami?</h3>
                 
-                <p style="font-size: 15px; line-height: 1.8; margin-bottom: 20px; color: #ddd;">
-                    Jelajah Wisata Sumatera menerapkan prinsip <strong style="color: var(--white);">kepuasan tamu adalah yang paling utama</strong>. Sejauh ini, kami tidak pernah sekalipun mendapat komentar negatif dari tamu, karena kami selalu memberikan pelayanan terbaik.
-                </p>
-                
-                <p style="font-size: 15px; line-height: 1.8; margin-bottom: 20px; color: #ddd;">
-                    Jelajah Wisata Sumatera adalah <strong style="color: var(--white);">agen travel terlengkap dan termurah</strong> di kelasnya dengan include yang sangat banyak. Anda hanya perlu membawa diri saja, dan biarkan kami yang menghandle semuanya.
-                </p>
-                
-                <p style="font-size: 15px; line-height: 1.8; color: #ddd;">
-                    Tentunya, kami juga akan memberikan <strong style="color: var(--white);">itinerary yang menarik dan seru</strong>. Seperti contoh itinerary 5D4N Danau Toba di bawah ini:
-                </p>
+                <ul class="why-list">
+                    <li>Kami menerapkan prinsip kejujuran dan kepuasan tamu adalah harga mati dan yang paling utama</li>
+                    <li class="hl">Satu satunya agent travel yang memberikan jaminan 100% uang kembali jika liburannya tidak sesuai atau tidak menyenangkan (contoh: kami memberikan video hotel yang akan digunakan beserta viewnya, dan itulah yang akan tuan dan puan dapatkan)</li>
+                    <li>Transaksi diluar harga package transparan dan tidak dilebihkan demi keuntungan pribadi, contoh: jika tamu mau main jetski atau yang lainnya, pembayaran jetski langsung ke pihak jetski (seadoo Safari Samosir) tanpa melalui kami</li>
+                    <li>Memiliki itinerary yang menarik dan sangat detail, sehingga tuan dan puan bisa tau tripnya pasti akan sangat seru</li>
+                    <li>Tour guide full service, akan siap membantu tuan dan puan dalam situasi apapun, seperti membantu membawa barang bawaan atau membantu mengambil gambar dan video menggunakan camera dan drone</li>
+                    <li>Jelajahwisatasumatera sudah berdiri selama 2 tahun dan sudah begitu banyak tamu yang kami handle dari dalam negara maupun luar negara, satupun tamu kami tidak ada yang kecewa dengan trip dan pelayanan yang kami berikan</li>
+                    <li>Privasi tuan dan puan akan kami jaga ketat jika request liburannya tidak ingin siapapun tahu, contohnya gambar/video selama liburan tidak akan kami upload ke story sosial media kami jika tidak dapat izin dari tuan &amp; puan sebagai tamu kami</li>
+                    <li>Tour guide tidak merokok/vape</li>
+                    <li>Tour guide akan membawa tuan dan puan ke tempat makan yang enak dan 100% halal</li>
+                    <li class="hl">Satu satunya agent travel dengan gear camera dan drone paling lengkap di medan (Canon, Nikon, Sony, dji mini 3, dji avata 360, dji mavic 4 pro, gimbal RS3 mini, iPhone 17 pro dan lain lain) semua gear camera dan drone milik kami, bukan pinjam atau sewa, jadi boleh take gambar dan video disemua tempat, dan juga pastinya gear akan terus kami tambah dan upgrade</li>
+                    <li>Balance/baki trip dibayar setelah trip selesai atau sebelum berpisah di airport (hati hati dengan travel agent yang meminta bayaran full payment di awal atau hari pertama)</li>
+                    <li>Jelajahwisatasumatera sudah memiliki perizinan usaha yang terdaftar di negara Indonesia (PT JELAJAH WISATA SUMATERA)</li>
+                </ul>
             </div>
 
             <section class="iti-section">
                 <h2>Contoh Itinerary 5D4N Danau Toba</h2>
                 
                 <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 16px;">
-                    <img src="assets/itenary1.jpeg" alt="Itinerary Danau Toba Page 1" style="width: 100%; border-radius: 12px; border: 1px solid var(--border);">
-                    <img src="assets/itenary2.jpeg" alt="Itinerary Danau Toba Page 2" style="width: 100%; border-radius: 12px; border: 1px solid var(--border);">
-                    <img src="assets/itenary3.jpeg" alt="Itinerary Danau Toba Page 3" style="width: 100%; border-radius: 12px; border: 1px solid var(--border);">
+                    <img src="assets/itenary1.webp" alt="Itinerary Danau Toba Page 1" width="1440" height="2037" loading="lazy" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border);">
+                    <img src="assets/itenary2.webp" alt="Itinerary Danau Toba Page 2" width="1440" height="2037" loading="lazy" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border);">
+                    <img src="assets/itenary3.webp" alt="Itinerary Danau Toba Page 3" width="1440" height="2037" loading="lazy" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border);">
                 </div>
+            </section>
+
+            <section class="closing">
+                <p>Untuk detail package dan cara booking boleh click <a href="/">table yang paling atas</a> dan pilih mau trip yang berapa hari ya</p>
+
+                <p>Contoh: swaktu awak click yang 5D4N akan diarahkan ke whatsapp kami dan kami akan memberikan detail package seperti</p>
+
+                <ul class="closing-list">
+                    <li>Pricelist</li>
+                    <li>Included</li>
+                    <li>Itinerary</li>
+                    <li>Video hotel yang akan digunakan selama trip</li>
+                    <li>Contoh hasil video drone kami</li>
+                    <li>Contoh hasil editing</li>
+                    <li>Dan detail lainnya</li>
+                </ul>
+
+                <p>Menggunakan whatsapp.</p>
+
+                <p class="closing-note">Disclaimer jika awak belum beli flight ticket mohon untuk tanya kami terlebih dahulu untuk available date, sebab lebih banyak yang kami tolak daripada kami terimakasih sebab tarikh yang dipilih sudah tak available.</p>
+
+                <p class="closing-thanks">Terimakasih, gembira bisa melayan tuan dan puan😊</p>
             </section>
         </main>
 

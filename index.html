@@ -224,19 +224,68 @@
         .pkg-days {
             font-family: 'Syne', sans-serif;
             font-weight: 700;
-            font-size: 17px;
+            font-size: 15px;
             color: var(--white);
             line-height: 1.1;
+            white-space: nowrap;
             transition: color 0.3s ease;
         }
 
         .pkg-nights {
             font-family: 'Inter', sans-serif;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 500;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        /* ─── BUKTI LEGALITAS PT ─── */
+        .legal-section {
+            margin-top: 32px;
+        }
+
+        .legal-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0.75;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Dokumennya berhuruf kecil-kecil; di lebar 400px tidak terbaca,
+           jadi gambarnya dibuat bisa dibuka penuh di tab baru. */
+        .legal-doc {
+            display: block;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            transition: var(--transition);
+        }
+
+        .legal-doc:hover {
+            border-color: rgba(212, 175, 55, 0.35);
+            box-shadow: 0 0 24px var(--accent-glow);
+        }
+
+        .legal-doc img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .legal-hint {
+            display: block;
+            margin-top: 8px;
+            text-align: center;
+            font-size: 10px;
             letter-spacing: 0.5px;
+            color: var(--text-muted);
         }
 
         /* ─── GALERI 2x2 ─── */
@@ -573,6 +622,23 @@
                 padding: 18px 20px;
             }
 
+            .pkg-row {
+                gap: 7px;
+            }
+
+            .pkg-btn {
+                padding: 12px 3px;
+            }
+
+            .pkg-days {
+                font-size: 14px;
+            }
+
+            .pkg-nights {
+                font-size: 7px;
+                letter-spacing: 0.2px;
+            }
+
             .floating-wa {
                 bottom: 20px;
                 right: 20px;
@@ -624,25 +690,25 @@
 
             <!-- ── Paket Trip (WA) ── -->
             <div class="pkg-row">
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%202D1N%20Danau%20Toba"
+                <a href="https://wa.me/6285272388532?text=Hello%2C%20saya%20berminat%20package%202D1N%20danau%20toba%2C%20bisa%20saya%20melihat%20semua%20detailnya%3F"
                     class="pkg-btn" target="_blank">
-                    <span class="pkg-days">2D</span>
-                    <span class="pkg-nights">1 Malam</span>
+                    <span class="pkg-days">2D1N</span>
+                    <span class="pkg-nights">Danau Toba</span>
                 </a>
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%203D2N%20Danau%20Toba"
+                <a href="https://wa.me/6285272388532?text=Hello%2C%20saya%20berminat%20package%203D2N%20danau%20toba%2C%20bisa%20saya%20melihat%20semua%20detailnya%3F"
                     class="pkg-btn" target="_blank">
-                    <span class="pkg-days">3D</span>
-                    <span class="pkg-nights">2 Malam</span>
+                    <span class="pkg-days">3D2N</span>
+                    <span class="pkg-nights">Danau Toba</span>
                 </a>
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%204D3N%20Danau%20Toba"
+                <a href="https://wa.me/6285272388532?text=Hello%2C%20saya%20berminat%20package%204D3N%20danau%20toba%2C%20bisa%20saya%20melihat%20semua%20detailnya%3F"
                     class="pkg-btn" target="_blank">
-                    <span class="pkg-days">4D</span>
-                    <span class="pkg-nights">3 Malam</span>
+                    <span class="pkg-days">4D3N</span>
+                    <span class="pkg-nights">Danau Toba</span>
                 </a>
-                <a href="https://wa.me/6285272388532?text=Halo%2C%20saya%20tertarik%20dengan%20Paket%20Trip%205D4N%20Danau%20Toba"
+                <a href="https://wa.me/6285272388532?text=Hello%2C%20saya%20berminat%20package%205D4N%20danau%20toba%2C%20bisa%20saya%20melihat%20semua%20detailnya%3F"
                     class="pkg-btn" target="_blank">
-                    <span class="pkg-days">5D</span>
-                    <span class="pkg-nights">4 Malam</span>
+                    <span class="pkg-days">5D4N</span>
+                    <span class="pkg-nights">Danau Toba</span>
                 </a>
             </div>
 
@@ -699,6 +765,17 @@
                 <span class="chevron">→</span>
             </a>
         </main>
+
+        <!-- ── Bukti Legalitas PT ── -->
+        <section class="legal-section">
+            <span class="legal-label">🛡️ Legalitas Usaha</span>
+            <a href="assets/legalitas-pt.webp" class="legal-doc" target="_blank">
+                <img src="assets/legalitas-pt.webp"
+                    alt="NO SCAM 100% — Jelajahwisatasumatera sudah memiliki perizinan berusaha yang terdaftar di negara Indonesia (PT Jelajah Wisata Sumatera)"
+                    width="1440" height="2560" loading="lazy">
+            </a>
+            <span class="legal-hint">Ketuk gambar untuk melihat dokumen ukuran penuh</span>
+        </section>
 
         <!-- ── Galeri Foto --── -->
         <div class="gallery-section" style="display: none; margin-top: 24px;">
